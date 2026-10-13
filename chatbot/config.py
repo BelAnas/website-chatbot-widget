@@ -61,6 +61,12 @@ class Settings:
     max_message_chars: int = 500
     max_history_turns: int = 6
     daily_message_budget: int = 2000
+    trust_proxy: bool = False             # True behind nginx or a load balancer: read X-Forwarded-For
+
+    # --- what the widget shows ---
+    greeting: str = "Hi! Ask me anything about our products, delivery or returns."
+    suggested_questions: list[str] = field(default_factory=lambda: [
+        "How long does delivery take?", "What is the warranty on desks?", "Can I get a quote for my team?"])
 
     # --- leads ---
     lead_webhook_url: str = ""
@@ -98,6 +104,10 @@ class Settings:
             max_message_chars=int(_env("MAX_MESSAGE_CHARS", str(d.max_message_chars))),
             max_history_turns=int(_env("MAX_HISTORY_TURNS", str(d.max_history_turns))),
             daily_message_budget=int(_env("DAILY_MESSAGE_BUDGET", str(d.daily_message_budget))),
+            trust_proxy=_env("TRUST_PROXY").lower() in ("1", "true", "yes"),
+            greeting=_env("GREETING", d.greeting),
+            suggested_questions=([q.strip() for q in _env("SUGGESTED_QUESTIONS").split("|") if q.strip()]
+                                 or d.suggested_questions),
             lead_webhook_url=_env("LEAD_WEBHOOK_URL"),
             lead_webhook_secret=_env("LEAD_WEBHOOK_SECRET"),
             admin_token=_env("ADMIN_TOKEN"),

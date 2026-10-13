@@ -9,7 +9,7 @@ import time
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS sessions (
     session_id TEXT PRIMARY KEY, created_at TEXT NOT NULL, page_url TEXT DEFAULT '',
-    lead_prompted INTEGER DEFAULT 0, lead_id INTEGER);
+    lead_prompted INTEGER DEFAULT 0, lead_reason TEXT DEFAULT '', lead_id INTEGER);
 CREATE TABLE IF NOT EXISTS messages (
     id INTEGER PRIMARY KEY, session_id TEXT NOT NULL, role TEXT NOT NULL, content TEXT NOT NULL,
     created_at TEXT NOT NULL, day TEXT NOT NULL, meta TEXT DEFAULT '{}');
@@ -60,8 +60,26 @@ class Store:
                     (session_id, _now(), page_url[:500]))
         return self._read("SELECT * FROM sessions WHERE session_id=?", (session_id,))[0]
 
-    def mark_lead_prompted(self, session_id: str) -> None:
-        self._write("UPDATE sessions SET lead_prompted=1 WHERE session_id=?", (session_id,))
+    def session(self, session_id: str) -> dict | None:
+        rows = self._read("SELECT * FROM sessions WHERE session_id=?", (session_id,))
+        return rows[0] if rows else None
+
+    def mark_lead_prompted(self, session_id: str, reason: str) -> None:
+        self._write("UPDATE sessions SET lead_prompted=1, lead_reason=? WHERE session_id=?", (reason, session_id))
+
+    def session_topics(self, session_id: str, limit: int = 5) -> str:
+        """The website pages the conversation touched, e.g. "Standing desks, Delivery".
+
+        This is what tells a salesperson what the visitor cares about before reading the transcript.
+        """
+        rows = self._read("SELECT meta FROM messages WHERE session_id=? AND role='assistant' ORDER BY id", (session_id,))
+        titles: list[str] = []
+        for row in rows:
+            for source in json.loads(row["meta"]).get("sources", []):
+                title = source["label"].split(" \u203a ")[0]
+                if title not in titles:
+                    titles.append(title)
+        return ", ".join(titles[:limit])
 
     def add_message(self, session_id: str, role: str, content: str, meta: dict | None = None) -> None:
         now = _now()

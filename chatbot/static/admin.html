@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chatbot admin: leads and unanswered questions</title>
+<style>
+  :root{--ink:#1c2321;--muted:#5d6b66;--line:#dfe5e1;--brand:#1f5f4a;--bg:#f6f7f5}
+  *{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+  main{max-width:1080px;margin:0 auto;padding:24px}h1{font-size:24px;margin:0 0 4px}h2{font-size:18px;margin:28px 0 8px}
+  .muted{color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+  .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}.card b{display:block;font-size:26px}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-size:14px}th{background:#eef2ef;font-weight:600}
+  .wrap{overflow-x:auto}.tag{display:inline-block;padding:1px 8px;border-radius:10px;background:#e4efe9;color:var(--brand);font-size:12px;white-space:nowrap}
+  .tag.warn{background:#fdecea;color:#8a1f17}button,.btn{background:var(--brand);color:#fff;border:0;border-radius:8px;padding:8px 12px;font-size:14px;cursor:pointer;text-decoration:none}
+  button.link{background:none;color:var(--brand);padding:0;text-decoration:underline}
+  input{border:1px solid #cdd4d0;border-radius:8px;padding:8px 10px;font-size:14px;width:260px}
+  .transcript{background:#f6f7f5;border-radius:8px;padding:8px 10px;margin-top:6px;white-space:pre-wrap;font-size:13px}
+  #login{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:16px}.error{color:#b3261e}
+</style>
+</head>
+<body>
+<main>
+  <h1>Chatbot admin</h1>
+  <p class="muted" id="site">Leads captured by the widget, and the questions the website could not answer.</p>
+
+  <form id="login">
+    <label for="token">Admin token (printed in the terminal when the service starts)</label><br>
+    <input id="token" type="password" autocomplete="off"> <button type="submit">Open</button>
+    <span class="error" id="login-error"></span>
+  </form>
+
+  <div id="content" hidden>
+    <div class="cards" id="cards"></div>
+    <h2 style="display:flex;justify-content:space-between;align-items:center">Leads <a class="btn" id="csv" style="font-size:13px;font-weight:400">Download CSV</a></h2>
+    <div class="wrap"><table id="leads"><thead><tr><th>When</th><th>Who</th><th>Why the form appeared</th><th>Pages discussed</th><th>CRM webhook</th><th>Conversation</th></tr></thead><tbody></tbody></table></div>
+    <h2>Questions the website could not answer</h2>
+    <p class="muted">Each line is a gap in the site's content: write the answer on a page and the bot will use it after the next ingest.</p>
+    <div class="wrap"><table id="gaps"><thead><tr><th>When</th><th>Question</th><th>Best match</th></tr></thead><tbody></tbody></table></div>
+  </div>
+</main>
+<script>
+// Everything a visitor typed is written with textContent, never innerHTML: a lead named
+// "<script>..." is shown as text and cannot run in the admin's browser.
+function cell(row, text) { const td = document.createElement("td"); td.textContent = text; row.appendChild(td); return td; }
+const REASONS = { buying_interest: "Buying interest", wants_human: "Asked for a person", not_covered: "Question not covered",
+                  "typed in chat": "Typed an email in the chat", form: "Form" };
+
+async function load(token) {
+  const r = await fetch("/api/admin/overview", { headers: { Authorization: "Bearer " + token } });
+  if (!r.ok) throw new Error(r.status === 401 ? "Wrong token." : "Could not load (" + r.status + ").");
+  const data = await r.json();
+  sessionStorage.setItem("admin-token", token);
+  document.getElementById("login").hidden = true;
+  document.getElementById("content").hidden = false;
+  document.getElementById("site").textContent = data.site + ": leads captured by the widget, and the questions the website could not answer."
+    + (data.webhook_configured ? "" : " No CRM webhook is configured (LEAD_WEBHOOK_URL), so leads are only stored here.");
+  document.getElementById("csv").href = "/api/admin/leads.csv?token=" + encodeURIComponent(token);
+
+  const cards = document.getElementById("cards"); cards.textContent = "";
+  [["Conversations", data.stats.conversations], ["Visitor messages", data.stats.visitor_messages],
+   ["Leads", data.stats.leads], ["Unanswered questions", data.stats.unanswered],
+   ["Leads per 100 conversations", data.stats.conversations ? (100 * data.stats.leads / data.stats.conversations).toFixed(1) : "0"]]
+    .forEach(([label, value]) => { const c = document.createElement("div"); c.className = "card";
+      const b = document.createElement("b"); b.textContent = value; c.append(b, label); cards.appendChild(c); });
+
+  const leads = document.querySelector("#leads tbody"); leads.textContent = "";
+  data.leads.forEach(lead => {
+    const row = document.createElement("tr");
+    cell(row, lead.created_at);
+    cell(row, [lead.name, lead.email, lead.phone, lead.company].filter(Boolean).join("\n")).style.whiteSpace = "pre-line";
+    cell(row, REASONS[lead.reason] || lead.reason);
+    cell(row, lead.interest || "-");
+    const hook = cell(row, ""); const tag = document.createElement("span");
+    tag.className = "tag" + (lead.webhook_status.startsWith("failed") ? " warn" : ""); tag.textContent = lead.webhook_status; hook.appendChild(tag);
+    const talk = cell(row, ""); const btn = document.createElement("button"); btn.className = "link"; btn.type = "button";
+    btn.textContent = "Show " + lead.transcript.length + " messages";
+    const box = document.createElement("div"); box.className = "transcript"; box.hidden = true;
+    box.textContent = lead.transcript.map(m => (m.role === "user" ? "Visitor: " : "Bot: ") + m.content).join("\n");
+    btn.onclick = () => { box.hidden = !box.hidden; };
+    talk.append(btn, box);
+    leads.appendChild(row);
+  });
+  if (!data.leads.length) cell(leads.insertRow(), "No leads yet. Open the demo website and ask for a quote.").colSpan = 6;
+
+  const gaps = document.querySelector("#gaps tbody"); gaps.textContent = "";
+  data.unanswered.forEach(g => { const row = document.createElement("tr");
+    cell(row, g.created_at); cell(row, g.question); cell(row, g.best_score == null ? "-" : g.best_score.toFixed(2)); gaps.appendChild(row); });
+  if (!data.unanswered.length) cell(gaps.insertRow(), "Nothing yet.").colSpan = 3;
+}
+
+document.getElementById("login").addEventListener("submit", ev => {
+  ev.preventDefault();
+  load(document.getElementById("token").value.trim()).catch(e => { document.getElementById("login-error").textContent = e.message; });
+});
+const saved = new URLSearchParams(location.search).get("token") || sessionStorage.getItem("admin-token");
+if (saved) load(saved).catch(() => sessionStorage.removeItem("admin-token"));
+</script>
+</body>
+</html>

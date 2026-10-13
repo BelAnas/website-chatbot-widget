@@ -153,30 +153,30 @@
     {
       "name": "Lead capture",
       "goal": "Interested visitors are detected, their details are stored and the sales team is notified.",
-      "status": "doing",
+      "status": "done",
       "steps": [
         {
           "text": "Write the lead-intent detector: rules that always run, plus a tool the model can call",
-          "done": false
+          "done": true
         },
         {
           "text": "Add the lead endpoint with validation, consent and the conversation attached",
-          "done": false
+          "done": true
         },
         {
           "text": "Pick up an email address a visitor types directly into the chat",
-          "done": false
+          "done": true
         },
         {
           "text": "Send each lead to a webhook with an HMAC signature and retries",
-          "done": false
+          "done": true
         },
         {
           "text": "Add an admin view of leads and unanswered questions, protected by a token, with CSV export",
-          "done": false
+          "done": true
         }
       ],
-      "outcome": ""
+      "outcome": "Lead capture works without a model: rules detect buying interest and requests for a person on every message, and the model can add to them through a tool. The contact form is validated field by field with required consent and a hidden trap field for bots; an email typed straight into the chat is also stored as a lead. Each lead keeps the conversation and the list of pages discussed, and is posted to a webhook with an HMAC signature and up to three attempts. A token-protected admin page lists leads and unanswered questions and exports CSV. Checked by a run against a sample receiver that verified the signature."
     },
     {
       "name": "Widget and guards",

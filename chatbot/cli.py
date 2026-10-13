@@ -79,7 +79,11 @@ def main(argv: list[str] | None = None) -> int:
         from .api import create_app
 
         port = args.port or settings.port
-        uvicorn.run(create_app(settings), host=args.host, port=port, log_level="warning")
+        app = create_app(settings)
+        print(f"Demo website with the widget:  http://{args.host}:{port}/")
+        print(f"Leads and unanswered questions: http://{args.host}:{port}/admin   (token: {app.state.admin_token})")
+        print(f"Answer writer: {app.state.engine.provider.name}   Search: {settings.search_mode}   Index: {app.state.engine.index.meta['passages']} passages")
+        uvicorn.run(app, host=args.host, port=port, log_level="warning")
     return 0
 
 

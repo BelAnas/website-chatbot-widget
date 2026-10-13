@@ -35,20 +35,20 @@ class FastEmbedder:
 
 
 class HashEmbedder:
-    """Offline stand-in used by the tests: words are hashed into 512 buckets.
+    """Offline stand-in used by the tests: words are hashed into 4,096 buckets.
 
     It only knows shared words, not meaning, so it is no substitute for the real model.
     It exists so the whole pipeline runs with no download and gives the same result every time.
     """
 
-    name = "hash-512"
+    name = "hash-4096"
     default_min_relevance = 0.22
 
     def embed(self, texts: list[str]) -> np.ndarray:
-        out = np.zeros((len(texts), 512), dtype=np.float32)
+        out = np.zeros((len(texts), 4096), dtype=np.float32)
         for row, text in enumerate(texts):
             for token in tokenize(text):
-                out[row, int.from_bytes(hashlib.md5(token.encode()).digest()[:4], "big") % 512] += 1.0
+                out[row, int.from_bytes(hashlib.md5(token.encode()).digest()[:4], "big") % 4096] += 1.0
         norms = np.linalg.norm(out, axis=1, keepdims=True)
         return out / np.where(norms == 0, 1.0, norms)
 
