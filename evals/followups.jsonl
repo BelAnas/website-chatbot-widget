@@ -1,0 +1,14 @@
+{"first": "Tell me about the Lift Pro", "followup": "how much is it?", "facts": ["$689"], "depends_on_first": true}
+{"first": "What is the Forma chair?", "followup": "and what's the weight limit?", "facts": ["125 kg"], "depends_on_first": true}
+{"first": "How much is standard delivery?", "followup": "and express?", "facts": ["$79"], "depends_on_first": true}
+{"first": "Do you have lockers?", "followup": "can they be stacked?", "facts": ["two high"], "depends_on_first": true}
+{"first": "What's your returns policy?", "followup": "who pays for that?", "facts": ["$25", "free"], "depends_on_first": true}
+{"first": "How long is the warranty on desk frames?", "followup": "what about the motors?", "facts": ["5 years"], "depends_on_first": true}
+{"first": "Where is the showroom?", "followup": "is it open on Saturday?", "facts": ["10 am"], "depends_on_first": true}
+{"first": "Can I order a custom desktop size?", "followup": "how much extra is that?", "facts": ["$60"], "depends_on_first": true}
+{"first": "Do you install the furniture?", "followup": "how much does it cost?", "facts": ["$35"], "depends_on_first": true}
+{"first": "Do you offer space planning?", "followup": "is it free?", "facts": ["free"], "depends_on_first": true}
+{"first": "Tell me about the Lift Pro", "followup": "What are the showroom opening hours?", "facts": ["9 am"], "depends_on_first": false}
+{"first": "How much is express delivery?", "followup": "Can I send a chair back if I don't like it?", "facts": ["30 days"], "depends_on_first": false}
+{"first": "What colours do the chairs come in?", "followup": "Do you ship to Canada?", "facts": ["$120"], "depends_on_first": false}
+{"first": "How long is the warranty on chairs?", "followup": "Is there parking at the showroom?", "facts": ["free"], "depends_on_first": false}

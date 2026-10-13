@@ -18,6 +18,7 @@ from collections.abc import AsyncIterator
 from typing import Protocol
 
 from .config import Settings
+from .embed import Embedder
 from .index import Hit
 from .text import sentences, tokenize
 
@@ -66,41 +67,67 @@ def build_messages(question: str, hits: list[Hit], history: list[dict], site_nam
     return messages
 
 
+def _whole_sentences(text: str) -> list[str]:
+    """Sentences, with a very short one ("Yes.") joined to the next: alone it answers nothing."""
+    out: list[str] = []
+    carry = ""
+    for sentence in sentences(text):
+        sentence = f"{carry} {sentence}".strip()
+        if len(sentence.split()) < 4:
+            carry = sentence
+        else:
+            out.append(sentence)
+            carry = ""
+    if carry:
+        out.append(carry)
+    return out
+
+
 class MockProvider:
     """Builds the answer from the passages' own sentences. Same input, same output, no network.
 
-    It cannot rephrase or combine facts, so its answers read like quotes. Its job is to make
-    the whole product (streaming, sources, leads) run and be tested without an API key.
+    It picks the sentences closest in meaning to the question, using the same embedder as the
+    search. It cannot rephrase, combine facts or say "no", so its answers read like quotes.
+    Its job is to make the whole product (streaming, sources, leads) run and be tested
+    without an API key.
     """
 
     name = "mock"
+    RANK_PENALTY = 0.03     # a sentence from the 2nd passage must be this much closer to win
+    SECOND_MARGIN = 0.10    # a second sentence is added only if it is nearly as close as the first
 
-    def __init__(self, delay_ms: int = 0, max_sentences: int = 2) -> None:
+    def __init__(self, delay_ms: int = 0, embedder: Embedder | None = None) -> None:
         self.delay = delay_ms / 1000
-        self.max_sentences = max_sentences
+        self.embedder = embedder
+
+    def _scores(self, query: str, texts: list[str]) -> list[float]:
+        if self.embedder is not None:
+            vectors = self.embedder.embed([query] + texts)
+            return [float(v) for v in vectors[1:] @ vectors[0]]
+        terms = set(tokenize(query))     # no embedder given: fall back to counting shared words
+        return [len(terms & set(tokenize(t))) / (len(terms) or 1) for t in texts]
 
     async def stream(self, question: str, search_query: str, hits: list[Hit], history: list[dict],
                      site_name: str) -> AsyncIterator[dict]:
-        terms = set(tokenize(search_query))
-        candidates = []   # (score, passage rank, position in passage, sentence, chunk id)
-        for rank, hit in enumerate(hits[:3]):
-            heading_terms = set(tokenize(hit.chunk.label))
-            for pos, sentence in enumerate(sentences(hit.chunk.text)):
-                own = set(tokenize(sentence))
-                # Words of the heading count for half: "Express delivery" above a sentence that
-                # says "it costs $79" is what makes that sentence the answer. Lower-ranked passages
-                # lose points: the best passage is usually the one that holds the answer.
-                score = len(terms & own) + 0.5 * len(terms & (heading_terms - own)) - 0.75 * rank
-                candidates.append((score, rank, pos, sentence, hit.chunk.id))
-        best = sorted(candidates, key=lambda c: (-c[0], c[1], c[2]))[: self.max_sentences]
-        best = [c for c in best if c[0] > 0] or sorted(candidates, key=lambda c: (c[1], c[2]))[:1]
-        best.sort(key=lambda c: (c[1], c[2]))   # read in the order of the website
-        answer = " ".join(c[3] for c in best)
+        candidates = [(rank, pos, sentence, hit.chunk) for rank, hit in enumerate(hits[:3])
+                      for pos, sentence in enumerate(_whole_sentences(hit.chunk.text))]
+        # The heading is scored with the sentence: "Express delivery" above "It costs $79" is
+        # what makes that sentence the answer to "how much is express delivery".
+        scores = self._scores(search_query, [f"{c[3].label}. {c[2]}" for c in candidates])
+        ranked = sorted(zip(scores, candidates), key=lambda sc: -(sc[0] - self.RANK_PENALTY * sc[1][0]))
+        best_score, best = ranked[0]
+        chosen = [best]
+        if len(ranked) > 1:
+            second_score, second = ranked[1]
+            if second_score - self.RANK_PENALTY * second[0] >= best_score - self.RANK_PENALTY * best[0] - self.SECOND_MARGIN:
+                chosen.append(second)
+        chosen.sort(key=lambda c: (c[0], c[1]))   # read in the order of the website
+        answer = " ".join(c[2] for c in chosen)
         for piece in re.findall(r"\S+\s*", answer):
             if self.delay:
                 await asyncio.sleep(self.delay)
             yield {"type": "token", "text": piece}
-        yield {"type": "used", "chunk_ids": list(dict.fromkeys(c[4] for c in best))}
+        yield {"type": "used", "chunk_ids": list(dict.fromkeys(c[3].id for c in chosen))}
         yield {"type": "usage", "input_tokens": 0, "output_tokens": 0, "cost_usd": 0.0}
 
 
@@ -158,9 +185,9 @@ class OpenAIProvider:
                "cost_usd": round((tokens_in * price_in + tokens_out * price_out) / 1_000_000, 6)}
 
 
-def make_provider(settings: Settings) -> Provider:
+def make_provider(settings: Settings, embedder: Embedder | None = None) -> Provider:
     if settings.llm_provider == "mock":
-        return MockProvider(settings.mock_delay_ms)
+        return MockProvider(settings.mock_delay_ms, embedder)
     if settings.llm_provider == "openai":
         if not settings.openai_api_key and not settings.openai_base_url:
             raise ValueError("LLM_PROVIDER=openai needs OPENAI_API_KEY (or OPENAI_BASE_URL for a local model)")

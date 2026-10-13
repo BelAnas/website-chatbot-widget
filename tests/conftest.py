@@ -47,7 +47,7 @@ def settings(tmp_path: Path) -> Settings:
 
 @pytest.fixture
 def engine(settings: Settings, index: SiteIndex) -> ChatEngine:
-    return ChatEngine(settings, index, Store(settings.db_path), MockProvider())
+    return ChatEngine(settings, index, Store(settings.db_path), MockProvider(embedder=index.embedder))
 
 
 @pytest.fixture

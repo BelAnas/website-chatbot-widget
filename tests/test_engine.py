@@ -7,7 +7,7 @@ from types import SimpleNamespace
 import pytest
 
 from chatbot.config import Settings
-from chatbot.engine import HANDOFF_ONLY, ChatEngine, search_query, small_talk
+from chatbot.engine import HANDOFF_ONLY, ChatEngine, small_talk
 from chatbot.llm import HANDOFF_TOOL, MockProvider, OpenAIProvider, build_messages, make_provider
 from chatbot.store import Store
 
@@ -82,13 +82,16 @@ def test_small_talk_needs_no_search_and_no_model(engine: ChatEngine) -> None:
 
 
 # ---- follow-ups and history ----
-def test_search_query_adds_the_previous_question_only_when_needed() -> None:
+def test_previous_question_is_added_only_when_the_message_does_not_stand_alone(engine: ChatEngine) -> None:
     history = [{"role": "user", "content": "Tell me about the Lift Pro"}, {"role": "assistant", "content": "..."}]
-    assert search_query("How much is it?", history) == "Tell me about the Lift Pro How much is it?"
-    assert search_query("and the warranty?", history) == "Tell me about the Lift Pro and the warranty?"
+    assert engine.retrieve("How much is it?", history)[0] == "Tell me about the Lift Pro How much is it?"
+    # Opens with "and": a continuation, even though "warranty" matches a page by itself.
+    assert engine.retrieve("and the warranty on desk frames?", history)[0].startswith("Tell me about the Lift Pro and")
+    # A full question about something else is a new topic and is searched as it is.
     standalone = "What are the showroom opening hours on Saturday?"
-    assert search_query(standalone, history) == standalone
-    assert search_query("How much is it?", []) == "How much is it?"
+    query, hits, in_scope = engine.retrieve(standalone, history)
+    assert query == standalone and in_scope and hits[0].chunk.page_title == "Visit the showroom"
+    assert engine.retrieve("How much is it?", [])[0] == "How much is it?"       # nothing to add
 
 
 def test_follow_up_question_finds_the_page_of_the_previous_one(engine: ChatEngine) -> None:

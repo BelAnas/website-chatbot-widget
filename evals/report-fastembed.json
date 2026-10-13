@@ -1,0 +1,768 @@
+{
+  "embedder": "BAAI/bge-small-en-v1.5",
+  "provider": "mock",
+  "model": "mock",
+  "search_mode": "hybrid",
+  "index": {
+    "pages": 14,
+    "passages": 66,
+    "words": 1632
+  },
+  "search": {
+    "bm25": {
+      "dev": {
+        "questions": 39,
+        "right_page_first_pct": 84.6,
+        "right_page_in_top3_pct": 89.7,
+        "mrr": 0.879
+      },
+      "test": {
+        "questions": 39,
+        "right_page_first_pct": 76.9,
+        "right_page_in_top3_pct": 82.1,
+        "mrr": 0.81
+      }
+    },
+    "dense": {
+      "dev": {
+        "questions": 39,
+        "right_page_first_pct": 89.7,
+        "right_page_in_top3_pct": 94.9,
+        "mrr": 0.923
+      },
+      "test": {
+        "questions": 39,
+        "right_page_first_pct": 89.7,
+        "right_page_in_top3_pct": 94.9,
+        "mrr": 0.929
+      }
+    },
+    "hybrid": {
+      "dev": {
+        "questions": 39,
+        "right_page_first_pct": 87.2,
+        "right_page_in_top3_pct": 97.4,
+        "mrr": 0.923
+      },
+      "test": {
+        "questions": 39,
+        "right_page_first_pct": 87.2,
+        "right_page_in_top3_pct": 89.7,
+        "mrr": 0.896
+      }
+    }
+  },
+  "scope_gate": {
+    "threshold_in_use": 0.63,
+    "threshold_suggested_by_dev_half": 0.63,
+    "dev_balanced_accuracy_pct": 98.7,
+    "test_site_questions_accepted_pct": 94.9,
+    "test_off_topic_refused_pct": 93.3,
+    "test_uncovered_refused_pct": 37.5,
+    "test_counts": {
+      "site": 39,
+      "off_topic": 15,
+      "uncovered": 8
+    },
+    "lowest_site_score": 0.585,
+    "highest_off_topic_score": 0.65
+  },
+  "answers": {
+    "dev": {
+      "questions": 39,
+      "answer_has_the_fact_pct": 79.5,
+      "right_page_linked_pct": 92.3,
+      "wrongly_refused_pct": 2.6
+    },
+    "test": {
+      "questions": 39,
+      "answer_has_the_fact_pct": 64.1,
+      "right_page_linked_pct": 84.6,
+      "wrongly_refused_pct": 5.1
+    },
+    "off_topic_test": {
+      "questions": 15,
+      "refused_pct": 93.3
+    }
+  },
+  "follow_ups": {
+    "follow_ups": 10,
+    "follow_up_answered_pct": 70.0,
+    "new_topics": 4,
+    "new_topic_answered_pct": 75.0
+  },
+  "lead_rules": {
+    "dev": {
+      "messages": 46,
+      "leads": 23,
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1": 1.0,
+      "missed": [],
+      "false_alarms": []
+    },
+    "test": {
+      "messages": 44,
+      "leads": 22,
+      "precision_pct": 100.0,
+      "recall_pct": 81.8,
+      "f1": 0.9,
+      "missed": [
+        "could a consultant visit our site",
+        "we have a budget of $20k for desks, what can you offer",
+        "do you do corporate accounts",
+        "get me a salesperson"
+      ],
+      "false_alarms": []
+    }
+  },
+  "speed": {
+    "search_ms_mean": 9.24,
+    "first_word_ms_median": 102.3,
+    "first_word_ms_p95": 165.4,
+    "full_answer_ms_median": 102.7,
+    "questions": 78
+  },
+  "widget": {
+    "bytes": 18107,
+    "gzip_bytes": 6250
+  },
+  "details": {
+    "answers_dev": [
+      {
+        "q": "how much is the lift one",
+        "answer": "The Lift One is our entry desk and costs $489. It has a single motor, a 120 x 60 cm desktop and lifts up to 70 kg.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "max weight the lift pro can carry?",
+        "answer": "The Lift Pro costs $689. It has two motors, a 160 x 80 cm desktop and lifts up to 120 kg.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "Is there a desk for two people?",
+        "answer": "The Lift Bench is a two-person desk for open-plan floors and costs $1,190. Each side moves on its own, so two colleagues can sit and stand independently.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "which desktop finish is best for hot desking",
+        "answer": "Desktops come in oak veneer, walnut veneer or white laminate at the same price. The laminate top is the most scratch resistant and is the one we recommend for shared desks.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "are the desk motors loud",
+        "answer": "The motors run at under 45 decibels, which is quieter than a normal conversation.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "which desk comes with a cable tray",
+        "answer": "Desktops come in oak veneer, walnut veneer or white laminate at the same price. The laminate top is the most scratch resistant and is the one we recommend for shared desks.",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "What chair do you recommend for a tall person?",
+        "answer": "It has a breathable mesh back, adjustable lumbar support and a seat that slides to fit different leg lengths. It is rated for users up to 125 kg.",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "do you have a stool for standing desks",
+        "answer": "The Perch is a height-adjustable stool for standing desks and costs $159. Its rounded base lets you lean and move while you work.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "can I buy new wheels for my chair",
+        "answer": "Companies planning to order 10 chairs or more can borrow a sample chair for 14 days, free of charge. Task chairs built for a full working day, with parts you can replace instead of replacing the chair.",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "how durable is the seat fabric",
+        "answer": "All seat fabrics are rated for 100,000 rub cycles, the standard for heavy commercial use. Chairs are covered for 7 years and seat fabrics for 2 years.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "do the lockers need keys",
+        "answer": "Each door has a combination lock, so there are no keys to lose. Banks can be bolted together side by side or stacked two high.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "how tall is the bookcase",
+        "answer": "The Shelf wall is an open bookcase, 180 cm tall with five shelves, and costs $219.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "what desktop thickness do the screens fit",
+        "answer": "Desk screens cost $89 each and clamp onto any desktop between 18 and 40 mm thick. Yes. Desktops can be cut to any width between 100 and 200 cm.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "discount for 60 desks?",
+        "answer": "The Lift One is our entry desk and costs $489. Desk screens cost $89 each and clamp onto any desktop between 18 and 40 mm thick.",
+        "fact": false,
+        "right_source": false,
+        "kind": "answer"
+      },
+      {
+        "q": "how long is a quote valid",
+        "answer": "A quote is valid for 30 days and fixes the price even if our list prices change.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "who looks after my order if I buy 30 desks",
+        "answer": "Order online with a card, or ask for a quote if you are buying for a team. Approved business accounts can pay by purchase order with an invoice due in 30 days.",
+        "fact": false,
+        "right_source": false,
+        "kind": "answer"
+      },
+      {
+        "q": "when will my order arrive with normal shipping",
+        "answer": "Standard orders arrive in 5 to 7 business days.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "do you deliver on weekends",
+        "answer": "Deliveries are made Monday to Friday. We do not deliver on Saturdays or Sundays.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "how do I track my parcel",
+        "answer": "You receive a tracking link by email as soon as the order leaves our warehouse. Deliveries are made Monday to Friday.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "Is shipping free?",
+        "answer": "The service is free and comes with no obligation to order. Standard delivery is free on orders over $500.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "do I need my own tools to build the desk",
+        "answer": "A desk takes about 25 minutes to assemble, and the only tool needed is included in the box.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "will you take away our old chairs",
+        "answer": "We can remove your old desks and chairs for $20 per item. Removed furniture is donated when it is usable and recycled when it is not.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "do the installers take the cardboard away",
+        "answer": "I could not find that on the Oakline Office website, so I would rather not guess.",
+        "fact": false,
+        "right_source": false,
+        "kind": "refusal"
+      },
+      {
+        "q": "do I need to keep the box to return something",
+        "answer": "If something is not right, send it back. The original packaging is not required.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "how long until I get my money back",
+        "answer": "If something is not right, send it back.",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "is there a restocking charge",
+        "answer": "On orders of more than 50 items, returned goods carry a 15% restocking fee.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "warranty for the motor",
+        "answer": "Motors and electronics are covered for 5 years.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "how do I make a warranty claim",
+        "answer": "Our furniture is built to stay in service, and the warranty says so in writing. Email a photo of the problem and your order number to support@oakline.example.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "how quickly do you send replacement parts under warranty",
+        "answer": "We ship the replacement part within 3 business days, and you never have to send the whole desk back.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "does the layout service cost anything",
+        "answer": "We return a 2D layout within 3 business days. The service is free and comes with no obligation to order.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "can someone come and measure our office",
+        "answer": "If you have no floor plan, a planner can visit and measure the space, provided it is within 100 miles of Austin, Texas. We return a 2D layout within 3 business days.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "are you open on saturday",
+        "answer": "It is open Monday to Friday from 9 am to 6 pm and Saturday from 10 am to 4 pm. It is closed on Sundays.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "can I see the products without travelling to Austin",
+        "answer": "If you have no floor plan, a planner can visit and measure the space, provided it is within 100 miles of Austin, Texas. The showroom is at 410 Cedar Row, Austin, Texas.",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "is your wood sustainably sourced",
+        "answer": "All wood in our desktops is FSC certified, and desk frames contain 62% recycled steel. Packaging is plastic-free and made from recycled cardboard.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "how long do you keep spare parts available",
+        "answer": "We stock spare parts for every product for at least 10 years after it leaves the range.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "do you ship to Canada",
+        "answer": "We ship to Canada, with delivery from $120 per order. We do not ship to any other country at the moment.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "can I cancel my order",
+        "answer": "You can change or cancel an order free of charge within 24 hours of placing it. After that the order is usually packed, and the normal returns policy applies.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "can we pay by invoice",
+        "answer": "Approved business accounts can pay by purchase order with an invoice due in 30 days. Approved business accounts can pay by purchase order with an invoice due in 30 days.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "how fast does support reply",
+        "answer": "We reply within 4 business hours.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      }
+    ],
+    "answers_test": [
+      {
+        "q": "What's the price of the Lift Pro?",
+        "answer": "The Lift Pro costs $689.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "how low and how high does the Lift One go",
+        "answer": "It has a single motor, a 120 x 60 cm desktop and lifts up to 70 kg. Its height adjusts from 72 to 118 cm with an up and down button.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "does the pro remember my height settings",
+        "answer": "I could not find that on the Oakline Office website, so I would rather not guess.",
+        "fact": false,
+        "right_source": false,
+        "kind": "refusal"
+      },
+      {
+        "q": "what wood options are there for the table top",
+        "answer": "Desktops come in oak veneer, walnut veneer or white laminate at the same price. The laminate top is the most scratch resistant and is the one we recommend for shared desks.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "How much electricity does a standing desk use when idle?",
+        "answer": "The desks plug into a standard wall outlet and use 0.1 W on standby. The motors run at under 45 decibels, which is quieter than a normal conversation.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "price of the forma chair",
+        "answer": "The Forma costs $329. The Forma Plus costs $449 and adds a headrest and armrests that adjust in four directions.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "weight limit forma plus",
+        "answer": "The Forma Plus costs $449 and adds a headrest and armrests that adjust in four directions. It is rated for users up to 150 kg and is the model we suggest for people taller than 190 cm.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "what colors can I get the seat in",
+        "answer": "Seats are available in charcoal, navy, forest green and sand.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "does the forma have lumbar support",
+        "answer": "It has a breathable mesh back, adjustable lumbar support and a seat that slides to fit different leg lengths. It is rated for users up to 125 kg.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "how much is the under-desk drawer unit",
+        "answer": "Desk screens cost $89 each and clamp onto any desktop between 18 and 40 mm thick. The Lift One is our entry desk and costs $489.",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "can lockers be stacked",
+        "answer": "Each door has a combination lock, so there are no keys to lose. Banks can be bolted together side by side or stacked two high.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "something to reduce noise between desks?",
+        "answer": "They are made from recycled felt and reduce speech noise between neighbouring desks. The motors run at under 45 decibels, which is quieter than a normal conversation.",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "what discount do I get on 30 chairs",
+        "answer": "Companies planning to order 10 chairs or more can borrow a sample chair for 14 days, free of charge.",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "How fast do you send a quotation",
+        "answer": "Tell us what you need and where it is going, and we send a written quote within one business day. A quote is valid for 30 days and fixes the price even if our list prices change.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "can we test a chair before ordering lots",
+        "answer": "Companies planning to order 10 chairs or more can borrow a sample chair for 14 days, free of charge. Sit in the chairs and try the desks before you decide.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "how much is shipping",
+        "answer": "Standard delivery is free on orders over $500. Below that amount it costs $39.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "cost of fast delivery",
+        "answer": "Standard delivery is free on orders over $500. Below that amount it costs $39.",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "will the driver carry the boxes into our office",
+        "answer": "For an extra $49 per order, the carrier brings the boxes into the room you choose instead of leaving them at the entrance. The driver needs a loading dock or ground-level access.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "lead time for a 60 desk order",
+        "answer": "A custom size adds $60 to the price and 10 business days to the delivery time. We ship the replacement part within 3 business days, and you never have to send the whole desk back.",
+        "fact": false,
+        "right_source": false,
+        "kind": "answer"
+      },
+      {
+        "q": "how long does it take to put a desk together",
+        "answer": "A desk takes about 25 minutes to assemble, and the only tool needed is included in the box.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "what does it cost to have you assemble everything",
+        "answer": "Our installers assemble and place furniture for $35 per desk and $15 per chair. Installation is free on orders of 25 workstations or more.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "is installation free for big orders",
+        "answer": "Buying for a team? Prices drop as the order grows, and you get one person to deal with from quote to installation.",
+        "fact": false,
+        "right_source": false,
+        "kind": "answer"
+      },
+      {
+        "q": "can I send a chair back if I don't like it",
+        "answer": "If something is not right, send it back.",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "who pays for return shipping",
+        "answer": "If an item is faulty or arrived damaged, the return is free. For any other reason we charge a pickup fee of $25 per item.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "can I return a custom-size top",
+        "answer": "Desktops cut to a custom size cannot be returned unless they are faulty. On orders of more than 50 items, returned goods carry a 15% restocking fee.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "how long is the guarantee on the desk frame",
+        "answer": "Desk frames are covered for 10 years. Desk frames carry a 10-year warranty, standard delivery is free on orders over $500, and a space planner will draw your floor layout at no charge.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "are chairs guaranteed",
+        "answer": "Task chairs built for a full working day, with parts you can replace instead of replacing the chair. Companies planning to order 10 chairs or more can borrow a sample chair for 14 days, free of charge.",
+        "fact": false,
+        "right_source": false,
+        "kind": "answer"
+      },
+      {
+        "q": "we run three shifts, does the warranty still apply",
+        "answer": "Furniture used around the clock in three-shift workplaces is covered for 3 years. Our furniture is built to stay in service, and the warranty says so in writing.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "can you help me plan the office layout",
+        "answer": "Not sure how many desks fit?",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "do you do 3d visualisations",
+        "answer": "For projects of 20 workstations or more we also produce a 3D render, so you can see the room before you order.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "where is your showroom",
+        "answer": "Sit in the chairs and try the desks before you decide. It is open Monday to Friday from 9 am to 6 pm and Saturday from 10 am to 4 pm.",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "is there parking at the showroom",
+        "answer": "You can walk in at any time during opening hours. Parking in front of the building is free.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "when was the company founded",
+        "answer": "I could not find that on the Oakline Office website, so I would rather not guess.",
+        "fact": false,
+        "right_source": false,
+        "kind": "refusal"
+      },
+      {
+        "q": "what happens to old oakline furniture at the end of its life",
+        "answer": "When Oakline furniture reaches the end of its life, we collect it free of charge and recycle the materials.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "do you take amex",
+        "answer": "When Oakline furniture reaches the end of its life, we collect it free of charge and recycle the materials. The crew takes away all packaging when the job is finished.",
+        "fact": false,
+        "right_source": false,
+        "kind": "answer"
+      },
+      {
+        "q": "can I get a desk 140 cm wide",
+        "answer": "It has a single motor, a 120 x 60 cm desktop and lifts up to 70 kg. Yes. Desktops can be cut to any width between 100 and 200 cm.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "do schools get a discount",
+        "answer": "Yes. Schools, universities and public bodies get the volume discounts from the first item and can order tax-exempt by sending their exemption certificate.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "what's your phone number",
+        "answer": "We reply within 4 business hours. Talk to a person: we answer every message.",
+        "fact": false,
+        "right_source": true,
+        "kind": "answer"
+      },
+      {
+        "q": "what time does the sales team start in the morning",
+        "answer": "The sales team is available Monday to Friday from 8 am to 6 pm Central Time.",
+        "fact": true,
+        "right_source": true,
+        "kind": "answer"
+      }
+    ],
+    "follow_ups": [
+      {
+        "first": "Tell me about the Lift Pro",
+        "followup": "how much is it?",
+        "answer": "The Lift Pro costs $689.",
+        "fact": true
+      },
+      {
+        "first": "What is the Forma chair?",
+        "followup": "and what's the weight limit?",
+        "answer": "It is rated for users up to 125 kg. It is rated for users up to 150 kg and is the model we suggest for people taller than 190 cm.",
+        "fact": true
+      },
+      {
+        "first": "How much is standard delivery?",
+        "followup": "and express?",
+        "answer": "Express delivery costs $79 and arrives in 2 to 3 business days. Standard delivery is free on orders over $500.",
+        "fact": true
+      },
+      {
+        "first": "Do you have lockers?",
+        "followup": "can they be stacked?",
+        "answer": "Each door has a combination lock, so there are no keys to lose. Banks can be bolted together side by side or stacked two high.",
+        "fact": true
+      },
+      {
+        "first": "What's your returns policy?",
+        "followup": "who pays for that?",
+        "answer": "If an item is faulty or arrived damaged, the return is free. For any other reason we charge a pickup fee of $25 per item.",
+        "fact": true
+      },
+      {
+        "first": "How long is the warranty on desk frames?",
+        "followup": "what about the motors?",
+        "answer": "Desk frames are covered for 10 years. Desk frames carry a 10-year warranty, standard delivery is free on orders over $500, and a space planner will draw your floor layout at no charge.",
+        "fact": false
+      },
+      {
+        "first": "Where is the showroom?",
+        "followup": "is it open on Saturday?",
+        "answer": "It is open Monday to Friday from 9 am to 6 pm and Saturday from 10 am to 4 pm. It is closed on Sundays.",
+        "fact": true
+      },
+      {
+        "first": "Can I order a custom desktop size?",
+        "followup": "how much extra is that?",
+        "answer": "Yes. Desktops can be cut to any width between 100 and 200 cm. A custom size adds $60 to the price and 10 business days to the delivery time.",
+        "fact": true
+      },
+      {
+        "first": "Do you install the furniture?",
+        "followup": "how much does it cost?",
+        "answer": "We can remove your old desks and chairs for $20 per item. Build it yourself in minutes, or let our crew install the whole floor.",
+        "fact": false
+      },
+      {
+        "first": "Do you offer space planning?",
+        "followup": "is it free?",
+        "answer": "Not sure how many desks fit? Our planners turn a floor plan into a furniture layout.",
+        "fact": false
+      },
+      {
+        "first": "Tell me about the Lift Pro",
+        "followup": "What are the showroom opening hours?",
+        "answer": "It is open Monday to Friday from 9 am to 6 pm and Saturday from 10 am to 4 pm. It is closed on Sundays.",
+        "fact": true
+      },
+      {
+        "first": "How much is express delivery?",
+        "followup": "Can I send a chair back if I don't like it?",
+        "answer": "If something is not right, send it back.",
+        "fact": false
+      },
+      {
+        "first": "What colours do the chairs come in?",
+        "followup": "Do you ship to Canada?",
+        "answer": "We ship to Canada, with delivery from $120 per order. We do not ship to any other country at the moment.",
+        "fact": true
+      },
+      {
+        "first": "How long is the warranty on chairs?",
+        "followup": "Is there parking at the showroom?",
+        "answer": "You can walk in at any time during opening hours. Parking in front of the building is free.",
+        "fact": true
+      }
+    ]
+  }
+}

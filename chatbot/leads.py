@@ -32,6 +32,13 @@ _BUYING = [re.compile(p, re.I) for p in (
     r"\b(want|wish|like|looking|need|ready|plan(ning)?|hoping|intend(ing)?) to (buy|order|purchase|get)\b",
     r"\binterested in (buying|ordering|purchasing|getting|your)\b",
     r"\bhow (do|can) (i|we) (buy|order|purchase)\b",
+    r"\b(send|give|make|email|mail) (me|us) (an?|your|the)?\s*(offer|price list|prices|pricing)\b",
+    # Quantities written as words: "about a hundred desks", "fifty chairs".
+    rf"\b(dozens?|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundreds?|thousands?)\s+(?:of\s+)?(?:\w+\s+){{0,2}}(?:{_COUNTED_THING})\b",
+    r"\b(big|large|huge|sizeable|major|substantial) (order|purchase|project)\b",
+    # A company speaking: "we need more desks", "our team is looking for chairs".
+    r"\b(we|our (team|company|office|startup|school|firm))\b[^.?!]*\b(need|want|require|looking for|buying|ordering)\b[^.?!]*\b(desks|chairs|workstations|furniture|lockers|stools|screens)\b",
+    r"\b(become|becoming) a (customer|client)\b|\b(open|set up|create) (an|a business|a trade|a company|a corporate) account\b",
 )]
 
 _HUMAN = [re.compile(p, re.I) for p in (
@@ -42,6 +49,8 @@ _HUMAN = [re.compile(p, re.I) for p in (
     r"\b(book|schedule|arrange|set up|reserve|organi[sz]e|request) (a|an|the|my|our)?\s*(\w+ ){0,2}(demo|visit|appointment|tour|call|meeting|consultation|viewing|callback)\b",
     r"\b(account manager|sales (team|rep\w*|person|department|staff)|customer service|a representative)\b",
     r"\b(real|actual|live) (person|human|agent)\b|\bhuman being\b|\bto a human\b",
+    r"\bwho (can|do|should|could|would) (i|we) (talk|speak|contact|call|email|ask|write)\b",
+    r"\b(reps?|representatives?)\b|\b(with|to|from|contact|reach) sales\b|\b(put|get) (me|us) (in touch|through)\b",
 )]
 
 

@@ -205,35 +205,35 @@
     {
       "name": "Quality",
       "goal": "Measured numbers for search, refusals, lead detection and speed.",
-      "status": "todo",
+      "status": "done",
       "steps": [
         {
           "text": "Write labelled evaluation sets: site questions, off-topic questions, lead and non-lead messages",
-          "done": false
+          "done": true
         },
         {
           "text": "Measure retrieval for keyword, meaning and hybrid search and pick the default",
-          "done": false
+          "done": true
         },
         {
           "text": "Set the refusal threshold on one half of the questions and report on the other half",
-          "done": false
+          "done": true
         },
         {
           "text": "Measure lead-detection precision and recall",
-          "done": false
+          "done": true
         },
         {
           "text": "Measure time to first word and the widget's file size",
-          "done": false
+          "done": true
         }
       ],
-      "outcome": ""
+      "outcome": "Three labelled sets written for this site (78 site questions, 30 off-topic and 16 uncovered questions, 90 visitor messages labelled lead or not, 14 follow-up cases) and one script that measures everything. On the held-out half: hybrid search puts the right page in the top three for 89.7% of questions (meaning search alone 94.9%, keywords alone 82.1%), the scope gate lets 94.9% of site questions through and refuses 93.3% of off-topic ones, and the lead rules reach 100% precision and 81.8% recall. The offline mock writer includes the expected fact in 64.1% of answers, which is the known ceiling of quoting sentences. The evaluation changed the code: the follow-up logic and the mock were rebuilt after their first scores."
     },
     {
       "name": "Verification and docs",
       "goal": "A stranger can clone it, run it and trust the numbers.",
-      "status": "todo",
+      "status": "doing",
       "steps": [
         {
           "text": "Run the full test suite offline with no key",

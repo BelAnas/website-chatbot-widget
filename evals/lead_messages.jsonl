@@ -1,0 +1,90 @@
+{"text": "Can I get a quote for 40 desks?", "lead": true, "split": "dev"}
+{"text": "what are your bulk discounts", "lead": true, "split": "test"}
+{"text": "We're opening a second office in Dallas and need furniture", "lead": true, "split": "dev"}
+{"text": "need pricing for 25 workstations", "lead": true, "split": "test"}
+{"text": "I'd like to speak with a sales rep", "lead": true, "split": "dev"}
+{"text": "can someone call me?", "lead": true, "split": "test"}
+{"text": "please email me a quotation", "lead": true, "split": "dev"}
+{"text": "we're a school looking to buy 120 chairs", "lead": true, "split": "test"}
+{"text": "is there a discount for large orders", "lead": true, "split": "dev"}
+{"text": "I want to book a showroom appointment for my team", "lead": true, "split": "test"}
+{"text": "how do I place an order for my company", "lead": true, "split": "dev"}
+{"text": "can I talk to a human", "lead": true, "split": "test"}
+{"text": "we are refurbishing our office next month", "lead": true, "split": "dev"}
+{"text": "Looking to furnish a 60 person office", "lead": true, "split": "test"}
+{"text": "send me an offer for 15 lift pro", "lead": true, "split": "dev"}
+{"text": "do you have an account manager I can speak to", "lead": true, "split": "test"}
+{"text": "I need a proposal for our procurement team", "lead": true, "split": "dev"}
+{"text": "can I arrange a video tour", "lead": true, "split": "test"}
+{"text": "we need about a hundred desks", "lead": true, "split": "dev"}
+{"text": "my boss asked me to get prices for the whole department", "lead": true, "split": "test"}
+{"text": "who can I talk to about a big order", "lead": true, "split": "dev"}
+{"text": "I'm ready to buy, what's next", "lead": true, "split": "test"}
+{"text": "can you set up a call with your planner", "lead": true, "split": "dev"}
+{"text": "interested in buying 12 chairs", "lead": true, "split": "test"}
+{"text": "want to order 20 lockers for our gym", "lead": true, "split": "dev"}
+{"text": "requesting a callback", "lead": true, "split": "test"}
+{"text": "our startup is growing and we need more desks soon", "lead": true, "split": "dev"}
+{"text": "could a consultant visit our site", "lead": true, "split": "test"}
+{"text": "we want to kit out a co-working space", "lead": true, "split": "dev"}
+{"text": "I need a quote for 35 Forma chairs", "lead": true, "split": "test"}
+{"text": "can I get a sample chair for our team to try", "lead": true, "split": "dev"}
+{"text": "need furniture for a new branch", "lead": true, "split": "test"}
+{"text": "what's the best price you can do for 50 units", "lead": true, "split": "dev"}
+{"text": "I'd like someone to contact me", "lead": true, "split": "test"}
+{"text": "is there a rep in Austin I can meet", "lead": true, "split": "dev"}
+{"text": "we have a budget of $20k for desks, what can you offer", "lead": true, "split": "test"}
+{"text": "put me in touch with sales", "lead": true, "split": "dev"}
+{"text": "do you do corporate accounts", "lead": true, "split": "test"}
+{"text": "I would like to become a customer, how do we start", "lead": true, "split": "dev"}
+{"text": "can I schedule a consultation", "lead": true, "split": "test"}
+{"text": "we are preparing a tender for municipal offices", "lead": true, "split": "dev"}
+{"text": "equipping a classroom with 30 desks", "lead": true, "split": "test"}
+{"text": "help, I need a real person", "lead": true, "split": "dev"}
+{"text": "get me a salesperson", "lead": true, "split": "test"}
+{"text": "planning a move to a larger office in spring", "lead": true, "split": "dev"}
+{"text": "how long does delivery take", "lead": false, "split": "dev"}
+{"text": "what colours do the chairs come in", "lead": false, "split": "test"}
+{"text": "is the lift pro noisy", "lead": false, "split": "dev"}
+{"text": "what is your return policy", "lead": false, "split": "test"}
+{"text": "where is the showroom", "lead": false, "split": "dev"}
+{"text": "does the desk need assembly", "lead": false, "split": "test"}
+{"text": "how much is the Forma chair", "lead": false, "split": "dev"}
+{"text": "what's the warranty on motors", "lead": false, "split": "test"}
+{"text": "do you ship to canada", "lead": false, "split": "dev"}
+{"text": "can I return a chair after 20 days", "lead": false, "split": "test"}
+{"text": "does the forma plus hold 150 kg", "lead": false, "split": "dev"}
+{"text": "is the desk 160 cm wide", "lead": false, "split": "test"}
+{"text": "my order hasn't arrived yet", "lead": false, "split": "dev"}
+{"text": "how do I track my order", "lead": false, "split": "test"}
+{"text": "what payment methods do you take", "lead": false, "split": "dev"}
+{"text": "thanks", "lead": false, "split": "test"}
+{"text": "hello", "lead": false, "split": "dev"}
+{"text": "is the wood FSC certified", "lead": false, "split": "test"}
+{"text": "what are your opening hours", "lead": false, "split": "dev"}
+{"text": "how many presets does the pro have", "lead": false, "split": "test"}
+{"text": "I ordered 2 chairs last week, when do they ship", "lead": false, "split": "dev"}
+{"text": "what's the difference between lift one and lift pro", "lead": false, "split": "test"}
+{"text": "is delivery free over $500", "lead": false, "split": "dev"}
+{"text": "do you have a stool", "lead": false, "split": "test"}
+{"text": "can I change my order", "lead": false, "split": "dev"}
+{"text": "how thick can the desktop be for the screens", "lead": false, "split": "test"}
+{"text": "what's the standby power", "lead": false, "split": "dev"}
+{"text": "do you deliver on saturday", "lead": false, "split": "test"}
+{"text": "how tall is the shelf wall", "lead": false, "split": "dev"}
+{"text": "is there parking", "lead": false, "split": "test"}
+{"text": "what does installation cost per desk", "lead": false, "split": "dev"}
+{"text": "does the warranty cover wear and tear", "lead": false, "split": "test"}
+{"text": "are spare parts available", "lead": false, "split": "dev"}
+{"text": "when was the company founded", "lead": false, "split": "test"}
+{"text": "is the laminate scratch resistant", "lead": false, "split": "dev"}
+{"text": "can one person assemble the desk", "lead": false, "split": "test"}
+{"text": "what's the height range of the lift pro", "lead": false, "split": "dev"}
+{"text": "I just want one chair for home", "lead": false, "split": "test"}
+{"text": "tell me about the perch", "lead": false, "split": "dev"}
+{"text": "do you sell to individuals", "lead": false, "split": "test"}
+{"text": "what's the lead time for a custom top", "lead": false, "split": "dev"}
+{"text": "are you a robot", "lead": false, "split": "test"}
+{"text": "do the lockers have keys", "lead": false, "split": "dev"}
+{"text": "my desk arrived damaged what do I do", "lead": false, "split": "test"}
+{"text": "does the 10 year warranty cover the motor", "lead": false, "split": "dev"}

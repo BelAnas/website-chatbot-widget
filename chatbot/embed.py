@@ -14,6 +14,9 @@ class Embedder(Protocol):
     # Below this similarity between a question and its best passage, the site does not cover
     # the question. Each value was chosen on the development half of evals/questions.jsonl.
     default_min_relevance: float
+    # At or above this similarity a message is a question in its own right. Below it, a
+    # message after an earlier question is treated as a follow-up ("and express?").
+    standalone_relevance: float
 
     def embed(self, texts: list[str]) -> np.ndarray: ...
 
@@ -21,7 +24,8 @@ class Embedder(Protocol):
 class FastEmbedder:
     """A real sentence-embedding model (ONNX, runs on CPU, about 70 MB downloaded once)."""
 
-    default_min_relevance = 0.62
+    default_min_relevance = 0.63
+    standalone_relevance = 0.71
 
     def __init__(self, model: str = "BAAI/bge-small-en-v1.5") -> None:
         from fastembed import TextEmbedding  # imported late: the tests never load the model
@@ -42,7 +46,8 @@ class HashEmbedder:
     """
 
     name = "hash-4096"
-    default_min_relevance = 0.22
+    default_min_relevance = 0.19
+    standalone_relevance = 0.45
 
     def embed(self, texts: list[str]) -> np.ndarray:
         out = np.zeros((len(texts), 4096), dtype=np.float32)

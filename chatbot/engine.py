@@ -41,20 +41,8 @@ _CONTACT_WORDS = frozenset(tokenize("sure s email e mail address phone number mo
 # When several signals fire on one message, the strongest one names the form.
 _REASON_RANK = {"wants_human": 3, "buying_interest": 2, "not_covered": 1}
 
-# Words that point back at the previous question: "how much is it?", "and the Pro?".
-_REFERS_BACK = re.compile(r"\b(it|its|that|this|those|these|they|them|one|ones|same)\b|^(and|what about|how about|also)\b", re.I)
-
-
-def search_query(message: str, history: list[dict]) -> str:
-    """Adds the previous question when the new one does not stand on its own.
-
-    "How much is it?" finds nothing by itself. Joined with "Tell me about the Lift Pro" it
-    finds the right page. This costs no model call, unlike asking a model to rewrite the question.
-    """
-    previous = next((m["content"] for m in reversed(history) if m["role"] == "user"), "")
-    if previous and (len(tokenize(message)) <= 3 or _REFERS_BACK.search(message)):
-        return f"{previous} {message}"
-    return message
+# A message that opens like this continues the previous question whatever it matches.
+_CONTINUES = re.compile(r"^\s*(and|what about|how about|also|same for|or)\b", re.I)
 
 
 def small_talk(message: str, site_name: str) -> str | None:
@@ -79,16 +67,28 @@ class ChatEngine:
         self.settings = settings
         self.index = index
         self.store = store
-        self.provider = provider or make_provider(settings)
+        self.provider = provider or make_provider(settings, index.embedder)
         self.min_relevance = (settings.min_relevance if settings.min_relevance is not None
                               else index.embedder.default_min_relevance)
         # Called with the lead id when a lead is created inside a chat turn (the API sends the webhook).
         self.on_lead: Callable[[int], None] | None = None
 
     def retrieve(self, message: str, history: list[dict]) -> tuple[str, list[Hit], bool]:
-        """Returns the query used, the passages found, and whether the site covers the question."""
-        query = search_query(message, history)
+        """Returns the query used, the passages found, and whether the site covers the question.
+
+        Follow-ups: "How much is it?" finds nothing useful alone. So the message is searched
+        alone first, and if it does not clearly match a page, it is searched again together
+        with the visitor's previous question. A message that matches well alone is a new
+        topic and is left alone. This costs a few milliseconds and no model call, unlike
+        asking a model to rewrite the question.
+        """
+        query = message
         hits = self.index.search(query, self.settings.search_mode, self.settings.top_k)
+        previous = next((m["content"] for m in reversed(history) if m["role"] == "user"), "")
+        best = max((h.cosine for h in hits), default=0.0)
+        if previous and (best < self.index.embedder.standalone_relevance or _CONTINUES.match(message)):
+            query = f"{previous} {message}"
+            hits = self.index.search(query, self.settings.search_mode, self.settings.top_k)
         # The scope gate. It looks at similarity of meaning, not at the fused rank score,
         # because a rank says which passage is best, not whether any passage is good.
         in_scope = bool(hits) and max(h.cosine for h in hits) >= self.min_relevance
