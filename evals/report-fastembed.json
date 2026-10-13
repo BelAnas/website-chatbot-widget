@@ -72,13 +72,15 @@
       "questions": 39,
       "answer_has_the_fact_pct": 79.5,
       "right_page_linked_pct": 92.3,
-      "wrongly_refused_pct": 2.6
+      "wrongly_refused_pct": 2.6,
+      "sales_tag_on_ordinary_question_pct": 0.0
     },
     "test": {
       "questions": 39,
       "answer_has_the_fact_pct": 64.1,
       "right_page_linked_pct": 84.6,
-      "wrongly_refused_pct": 5.1
+      "wrongly_refused_pct": 5.1,
+      "sales_tag_on_ordinary_question_pct": 0.0
     },
     "off_topic_test": {
       "questions": 15,
@@ -117,10 +119,10 @@
     }
   },
   "speed": {
-    "search_ms_mean": 9.24,
-    "first_word_ms_median": 102.3,
-    "first_word_ms_p95": 165.4,
-    "full_answer_ms_median": 102.7,
+    "search_ms_mean": 5.49,
+    "first_word_ms_median": 63.5,
+    "first_word_ms_p95": 109.7,
+    "full_answer_ms_median": 63.8,
     "questions": 78
   },
   "widget": {

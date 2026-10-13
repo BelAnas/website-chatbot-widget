@@ -13,7 +13,7 @@ import httpx
 # --- 1. Intent rules -------------------------------------------------------------------------
 # These run on every visitor message, before and regardless of the model. They are free,
 # instant and explainable, and they keep lead capture working when the model is the mock or
-# is down. The model can add to them through its handoff tool, but cannot switch them off.
+# is down. The model can add to them with a tag in its answer, but cannot switch them off.
 
 _COUNTED_THING = (r"desks?|chairs?|units?|workstations?|people|persons?|employees|staff|seats?|lockers?|stools?|"
                   r"pedestals?|screens?|items?|pieces|sets?|users?|colleagues|students|classrooms?|offices|floors?")

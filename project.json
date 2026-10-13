@@ -5,21 +5,25 @@
   "title": "Embeddable website chatbot with lead capture",
   "tagline": "A chat widget you add to any website with one script tag: it answers from the site's own pages, streams the reply, and turns interested visitors into leads.",
   "category": "Chatbots",
-  "status": "building",
+  "status": "done",
   "started": "2026-10-13",
-  "finished": "",
+  "finished": "2026-10-13",
   "pitch": "I built a chat widget that a business adds to its website with one line of code. It reads the site's own pages, so it answers visitors' questions from what the company actually says, with a link to the page, and it says so when the site does not cover the question. When a visitor shows buying interest, or asks something the site cannot answer, the widget offers a short contact form and the lead goes to the sales team with the whole conversation attached.",
   "problem": "Most visitors leave a website without finding their answer and without leaving a contact. A contact form asks for effort before giving anything back, and live chat needs a person online. A generic chatbot answers from its own memory, so it invents prices and policies the business never published.",
-  "solution": "A small service and a JavaScript widget for a fictional office-furniture supplier. The service crawls the website, splits each page into sections and indexes them. A visitor's question is matched to the most relevant sections, a language model writes a short answer from those sections only, and the answer is streamed to the widget word by word with links to the source pages. A lead detector watches for buying interest and for questions the site cannot answer, then the widget shows a contact form. Leads are stored with the conversation and sent to a CRM by a signed webhook.",
+  "solution": "A small service and a JavaScript widget for a fictional office-furniture supplier. The service crawls the website, splits each page into sections and indexes them. A visitor's question is matched to the most relevant sections, a language model writes a short answer from those sections only, and the answer is streamed to the widget word by word with links to the source pages. Rules watch every message for buying interest and requests for a person, and unanswered questions are noticed too; in each case the widget shows a contact form. Leads are stored with the conversation and sent to a CRM by a signed webhook.",
   "features": [
     "One script tag embeds the widget on any site; its styles are isolated from the host page",
     "Answers come from the website's own pages, with links to the page and section used",
     "Replies are streamed word by word over server-sent events",
-    "Refuses politely when the site does not cover the question, instead of guessing",
-    "Detects buying interest and offers a contact form inside the chat",
-    "Stores each lead with the conversation and sends it to a CRM through a signed webhook",
-    "Works offline with a built-in mock model; switches to OpenAI or a local model with one setting",
-    "Limits on origin, request rate and message size protect the owner's API bill"
+    "Refuses politely when the site does not cover the question, and records it as a gap in the content",
+    "Detects buying interest and requests for a person with rules that need no model, and offers a contact form inside the chat",
+    "Picks up an email address typed straight into the chat",
+    "Stores each lead with the conversation and the pages discussed, and sends it to a CRM through a signed webhook with retries",
+    "Admin page with leads, conversations, unanswered questions and CSV export",
+    "Works offline with a built-in mock writer; switches to OpenAI or a local model with one setting",
+    "Origin allow-list, rate limit, message-size cap and daily budget, all checked before any model call",
+    "Crawler that follows the sitemap and robots.txt and strips menus, footers and cookie banners",
+    "One command measures search, refusals, lead detection and speed on labelled questions"
   ],
   "stack": [
     {
@@ -40,7 +44,7 @@
     {
       "name": "BM25 + sentence embeddings (fastembed)",
       "role": "Finds the page sections that match a question.",
-      "why": "Keyword search catches product names and codes, meaning search catches paraphrases; both run on CPU."
+      "why": "Keyword search catches product names and codes, meaning search catches paraphrases such as 'shipping' for 'delivery'; both run on CPU."
     },
     {
       "name": "OpenAI-compatible chat API",
@@ -51,10 +55,81 @@
       "name": "SQLite",
       "role": "Stores conversations, leads and unanswered questions.",
       "why": "One file, no server to run, enough for one website's chat traffic."
+    },
+    {
+      "name": "Playwright (development only)",
+      "role": "Drives the widget in a real headless browser to check streaming, the form and cross-site embedding.",
+      "why": "A widget is browser code: only a browser can prove it works. It is not needed to run the product."
     }
   ],
-  "keywords": [],
-  "topics": [],
+  "keywords": [
+    "chatbot",
+    "AI chatbot",
+    "website chatbot",
+    "chat widget",
+    "embeddable widget",
+    "virtual assistant",
+    "customer support bot",
+    "lead capture",
+    "lead generation",
+    "lead qualification",
+    "sales assistant",
+    "RAG",
+    "retrieval-augmented generation",
+    "chat with your website",
+    "website crawler",
+    "sitemap",
+    "knowledge base bot",
+    "FAQ bot",
+    "streaming responses",
+    "SSE",
+    "server-sent events",
+    "OpenAI",
+    "GPT-4o-mini",
+    "Ollama",
+    "local LLM",
+    "FastAPI",
+    "JavaScript widget",
+    "Shadow DOM",
+    "CRM webhook",
+    "Zapier",
+    "n8n",
+    "Make",
+    "HubSpot",
+    "hybrid search",
+    "BM25",
+    "embeddings",
+    "semantic search",
+    "hallucination",
+    "guardrails",
+    "rate limiting",
+    "CORS",
+    "prompt injection",
+    "Intercom alternative",
+    "Tidio alternative",
+    "WordPress chatbot",
+    "Shopify chatbot",
+    "conversational AI",
+    "customer service automation"
+  ],
+  "topics": [
+    "chatbot",
+    "chat-widget",
+    "lead-generation",
+    "rag",
+    "retrieval-augmented-generation",
+    "fastapi",
+    "server-sent-events",
+    "streaming",
+    "openai",
+    "llm",
+    "javascript-widget",
+    "web-crawler",
+    "hybrid-search",
+    "embeddings",
+    "customer-support",
+    "python"
+  ],
   "workflow": [
     {
       "step": "Crawl",
@@ -156,7 +231,7 @@
       "status": "done",
       "steps": [
         {
-          "text": "Write the lead-intent detector: rules that always run, plus a tool the model can call",
+          "text": "Write the lead-intent detector: rules that always run, plus an optional signal from the model",
           "done": true
         },
         {
@@ -176,7 +251,7 @@
           "done": true
         }
       ],
-      "outcome": "Lead capture works without a model: rules detect buying interest and requests for a person on every message, and the model can add to them through a tool. The contact form is validated field by field with required consent and a hidden trap field for bots; an email typed straight into the chat is also stored as a lead. Each lead keeps the conversation and the list of pages discussed, and is posted to a webhook with an HMAC signature and up to three attempts. A token-protected admin page lists leads and unanswered questions and exports CSV. Checked by a run against a sample receiver that verified the signature."
+      "outcome": "Lead capture works without a model: rules detect buying interest and requests for a person on every message, and the model can add to them. The contact form is validated field by field with required consent and a hidden trap field for bots; an email typed straight into the chat is also stored as a lead. Each lead keeps the conversation and the list of pages discussed, and is posted to a webhook with an HMAC signature and up to three attempts. A token-protected admin page lists leads and unanswered questions and exports CSV. Checked by a run against a sample receiver that verified the signature."
     },
     {
       "name": "Widget and guards",
@@ -233,43 +308,629 @@
     {
       "name": "Verification and docs",
       "goal": "A stranger can clone it, run it and trust the numbers.",
-      "status": "doing",
+      "status": "done",
       "steps": [
         {
           "text": "Run the full test suite offline with no key",
-          "done": false
+          "done": true
         },
         {
           "text": "Run the quick start from a clean clone",
-          "done": false
+          "done": true
         },
         {
-          "text": "Run the real-model check and record its cost",
-          "done": false
+          "text": "Run the real-model check and record its cost (done on a local model: no OpenAI key was available)",
+          "done": true
         },
         {
           "text": "Write the README with a diagram, real output and the results table",
-          "done": false
+          "done": true
         },
         {
           "text": "Complete the dashboard entry: decisions, client questions, concepts, limits",
-          "done": false
+          "done": true
         }
       ],
-      "outcome": ""
+      "outcome": "84 tests pass offline with no key. A fresh clone installed from requirements.txt, passed the tests, served the demo and crawled it over HTTP; the Docker image was built and answered a question. The paid OpenAI check did not run because no key was available. The same code path was run on a local 3B llama3.2 model instead, and that run changed the design: tool calling made the model write nothing, so it was replaced by a tag in the answer, after which 85.0% of sampled answers contained the fact from the website. The README, the results table and this dashboard entry were written from the reports in evals/."
     }
   ],
-  "decisions": [],
-  "results": [],
-  "client_qa": [],
-  "concepts": [],
-  "limits": [],
-  "run": [],
-  "files": [],
+  "decisions": [
+    {
+      "title": "How to detect that a visitor is a lead",
+      "chosen": "Rules that run on every message. The model can also ask for the form with a tag in its answer, but that is switched off by default.",
+      "why": "The rules cost nothing, answer instantly, and still work when the model is the offline mock or is down, so the business never loses a lead to an outage. On 44 held-out messages they were right every time they fired (precision 100.0%) and caught 81.8% of the leads. The model's tag is meant for the indirect phrasing that rules miss, such as a budget mentioned in passing. I measured it on the one real model I could run, a small local one, and it added a sales tag to 40.0% of ordinary questions, so it is opt-in until it has been measured on the model a client actually uses.",
+      "alternatives": [
+        {
+          "option": "Let the model decide alone",
+          "why_not": "Lead capture would stop whenever the model is slow, down or over budget, and every decision would cost a model call. It would also be harder to explain to a client why the form appeared."
+        },
+        {
+          "option": "Show the contact form to everyone from the start",
+          "why_not": "A form before any help is what visitors already ignore on a contact page. Asking after a useful answer, when interest is visible, is the reason to have a chatbot."
+        },
+        {
+          "option": "Train a small classifier",
+          "why_not": "It needs a few thousand labelled real messages, which a new site does not have. The rules are a reasonable start and the stored conversations become that training set later."
+        }
+      ],
+      "at_scale": "After a few months, the stored conversations and which of them became customers are used to train a classifier or to score leads, and the rules stay as a safety net."
+    },
+    {
+      "title": "How the model asks for the contact form",
+      "chosen": "A tag at the end of its answer, such as [[SALES]] or [[NOT_COVERED]], which the service removes from the stream before the visitor sees it.",
+      "why": "I first used tool calling, the standard mechanism. When I ran it on a small local model, the model called the tool on all 28 questions that reached it and wrote no answer at all, so every visitor would have got 'I can pass this to the team'. With a tag, the same model put the fact from the website in 85.0% of its answers, and a misused tag can no longer erase an answer. It also works on models that do not support tools. The first report is kept in the repository as evidence.",
+      "alternatives": [
+        {
+          "option": "Tool calling (function calling)",
+          "why_not": "Reliable on large hosted models, but it failed completely on the 3B local model I could test, and I could not verify it on OpenAI in this build because no key was available."
+        },
+        {
+          "option": "Ask the model for JSON with the answer and a flag",
+          "why_not": "JSON cannot be shown word by word as it streams without a special parser, and small models break the format."
+        },
+        {
+          "option": "A second model call that classifies the conversation",
+          "why_not": "Doubles cost and delay for a signal the rules already give for free in most cases."
+        }
+      ],
+      "at_scale": "With one fixed, capable hosted model I would test tool calling again on a few hundred real conversations and switch if it is cleaner. The rest of the engine does not care which of the two produced the signal."
+    },
+    {
+      "title": "How to carry the answer to the browser",
+      "chosen": "Server-sent events read from a POST request with fetch.",
+      "why": "The answer only flows one way, from server to browser, and server-sent events are plain HTTP: they pass through ordinary proxies and need no special hosting. The question goes in a POST body, so it stays out of URLs and server logs. In the browser check the text was seen at more than 30 different lengths while one answer arrived.",
+      "alternatives": [
+        {
+          "option": "WebSocket",
+          "why_not": "Two-way and stateful: it needs sticky connections and more care behind load balancers, for a conversation where the browser sends one message and then only listens."
+        },
+        {
+          "option": "EventSource (the browser's built-in SSE client)",
+          "why_not": "It can only send GET requests, so the question and the session would have to go in the URL."
+        },
+        {
+          "option": "Wait for the full answer, then show it",
+          "why_not": "The visitor stares at a blank bubble for seconds with a real model. Seeing the first words quickly is most of what makes a chatbot feel fast."
+        }
+      ],
+      "at_scale": "The same endpoint sits behind nginx or a CDN with buffering turned off for that path. Typing indicators or a live human agent would justify moving to WebSockets."
+    },
+    {
+      "title": "How to handle follow-up questions such as 'and express?'",
+      "chosen": "Search the message alone first. If it does not clearly match a page, search again with the visitor's previous question added.",
+      "why": "My first version looked for pronouns and short messages, and it wrongly glued new topics to old ones: 'Can I send a chair back if I don't like it?' was treated as a follow-up because of the word 'it'. Looking at the search score instead separated the 14 cases I wrote cleanly: follow-ups scored 0.68 or less alone, new topics 0.74 or more. It costs a few milliseconds and no model call.",
+      "alternatives": [
+        {
+          "option": "Ask a model to rewrite the question",
+          "why_not": "The usual approach, and more robust, but it doubles the model calls and adds a second or so before the first word."
+        },
+        {
+          "option": "Always add the previous question",
+          "why_not": "A new topic gets polluted by the old one and the wrong page comes back."
+        },
+        {
+          "option": "Send only the last message",
+          "why_not": "'How much is it?' finds nothing by itself."
+        }
+      ],
+      "at_scale": "With a fast, cheap model the rewrite step becomes affordable and handles longer conversations, where the topic was set three turns ago."
+    },
+    {
+      "title": "Which search to use, and where to keep the index",
+      "chosen": "Hybrid search (BM25 keywords and embedding similarity merged by reciprocal rank fusion), held in memory with NumPy.",
+      "why": "I measured all three on questions I had labelled. On the half used for choosing, hybrid and meaning-only search tied on rank quality and hybrid found the right page in the top three more often (97.4% against 94.9%). On the held-out half meaning-only was ahead (94.9% against 89.7%), a difference of two questions out of 39, so the data does not separate them. Keyword-only search was clearly worst (82.1%). I kept hybrid because keyword matching is what finds exact product names and codes, and one setting switches it. A website is a few hundred passages, so a matrix in memory answers in about 5 ms.",
+      "alternatives": [
+        {
+          "option": "Meaning search only",
+          "why_not": "As good or better on this small site. It is weaker on exact identifiers such as part numbers, which real catalogues are full of. It is one setting away (SEARCH_MODE=dense)."
+        },
+        {
+          "option": "Keyword search only",
+          "why_not": "Visitors say 'shipping' when the page says 'delivery'. It found the right page in the top three for 82.1% of questions, the lowest of the three."
+        },
+        {
+          "option": "A vector database (Qdrant, pgvector, Pinecone)",
+          "why_not": "It is one more service to run and pay for, to search 66 passages. It becomes worth it from tens of thousands of passages or several sites."
+        }
+      ],
+      "at_scale": "Several client sites in one service, or a catalogue of thousands of products, moves the vectors to Qdrant or pgvector with one index per site, and the fusion weights are tuned on that site's real questions."
+    },
+    {
+      "title": "How to stop the bot answering what the site does not cover",
+      "chosen": "A similarity threshold in front of the model, chosen on one half of the questions and reported on the other, plus a tag the model adds when the passages do not hold the answer.",
+      "why": "The threshold is free and runs before the model, so an off-topic or abusive question costs nothing. On held-out questions it let 94.9% of site questions through and refused 93.3% of off-topic ones. It cannot catch a missing detail on a covered subject ('do the chairs come in red?'): it refused only 37.5% of those, which is why the model has a second line of defence and why I report that number instead of hiding it.",
+      "alternatives": [
+        {
+          "option": "Rely on the prompt alone ('only answer from the context')",
+          "why_not": "Every off-topic message would cost a model call, and a prompt is a request, not a guarantee."
+        },
+        {
+          "option": "A separate model call to classify the question",
+          "why_not": "It adds cost and delay to every message to do what a number already computed during search does for free."
+        },
+        {
+          "option": "No gate",
+          "why_not": "The bot becomes a free general-purpose chatbot on the owner's bill, and answers questions about anything under the company's name."
+        }
+      ],
+      "at_scale": "The threshold is re-measured on real visitor questions for each site, and refused questions are reviewed weekly, because each one is either a gap in the site or a threshold set too high."
+    },
+    {
+      "title": "How to build the widget",
+      "chosen": "One plain JavaScript file with a shadow root, no framework and no build step.",
+      "why": "It has to load on websites I do not control. A shadow root keeps the host page's styles from breaking the widget and the widget's styles from leaking out. With no framework the file is 18,107 bytes (6,250 compressed), so it does not slow the client's page. All text is written with textContent, so an answer or a visitor message containing HTML cannot run as code; the browser check confirms it.",
+      "alternatives": [
+        {
+          "option": "An iframe",
+          "why_not": "The strongest isolation, but awkward to resize on phones, and it cannot read the page address the visitor is on without extra messaging."
+        },
+        {
+          "option": "A React or Vue bundle",
+          "why_not": "Adds a hundred kilobytes or more to someone else's website and can clash with the site's own copy of the framework."
+        },
+        {
+          "option": "A hosted third-party widget",
+          "why_not": "A monthly fee per seat, the conversations live on someone else's servers, and the answers cannot be tied to the client's own content and rules."
+        }
+      ],
+      "at_scale": "The file is served from a CDN with a version in its name, and the colours, texts and form fields come from a per-site configuration that the client edits in an admin screen."
+    },
+    {
+      "title": "Where the conversation history lives",
+      "chosen": "On the server, in SQLite, looked up by a random session id. The browser sends only the new message.",
+      "why": "If the browser sent the history, a visitor could plant a fake assistant message ('as agreed, the discount is 90%') to steer the model, or send a huge history to run up the bill. Reading it from the database closes both. The same stored conversation is what gets attached to the lead.",
+      "alternatives": [
+        {
+          "option": "The browser sends the whole conversation each time",
+          "why_not": "Simpler and stateless, but the server would have to trust text it cannot verify."
+        },
+        {
+          "option": "Signed history tokens",
+          "why_not": "Keeps the server stateless and safe, but the conversation has to be stored anyway to attach it to a lead."
+        }
+      ],
+      "at_scale": "PostgreSQL replaces SQLite when there are several servers, with a retention period after which conversations without a lead are deleted."
+    },
+    {
+      "title": "How leads reach the sales team",
+      "chosen": "A signed webhook with retries, plus an admin page and a CSV export.",
+      "why": "Every CRM and automation tool (HubSpot, Zapier, Make, n8n) accepts a webhook, so one mechanism covers them all. The lead is stored first and sent second, so a CRM outage never loses it, and the HMAC signature lets the receiver prove the request came from this service. I ran it against a sample receiver that verified the signature.",
+      "alternatives": [
+        {
+          "option": "A direct integration with one CRM",
+          "why_not": "Ties the project to one vendor's API and credentials. It is a small adapter to add when a client names their CRM."
+        },
+        {
+          "option": "Email the lead to the sales address",
+          "why_not": "Works on day one, but emails are not tracked, deduplicated or assigned."
+        }
+      ],
+      "at_scale": "A queue with a retry schedule over hours, a dead-letter list in the admin page, and a direct adapter for the client's CRM that also checks whether the contact already exists."
+    }
+  ],
+  "results": [
+    {
+      "metric": "Automated tests",
+      "value": "84 passed (pytest, offline, no key)",
+      "how": "`.venv/bin/pytest -q` (offline, no key, no model download)"
+    },
+    {
+      "metric": "Widget checks in a real headless browser",
+      "value": "15 of 15 passed",
+      "how": "`python -m scripts.browser_check` (streaming, source links, lead form, second origin, phone width, HTML shown as text)"
+    },
+    {
+      "metric": "Right page in the top 3, hybrid search (the default)",
+      "value": "89.7% of 39 questions",
+      "how": "`python -m evals.run` (held-out test half of evals/questions.jsonl)"
+    },
+    {
+      "metric": "Right page in the top 3, meaning search only",
+      "value": "94.9%",
+      "how": "`python -m evals.run` (held-out test half of evals/questions.jsonl)"
+    },
+    {
+      "metric": "Right page in the top 3, keyword search only",
+      "value": "82.1%",
+      "how": "`python -m evals.run` (held-out test half of evals/questions.jsonl)"
+    },
+    {
+      "metric": "Site questions let through by the scope gate",
+      "value": "94.9% of 39",
+      "how": "`python -m evals.run` (held-out test half of evals/questions.jsonl)"
+    },
+    {
+      "metric": "Off-topic questions refused before any model call",
+      "value": "93.3% of 15",
+      "how": "`python -m evals.run` (held-out test half of evals/questions.jsonl)"
+    },
+    {
+      "metric": "Business questions the site does not answer, refused by the gate alone",
+      "value": "37.5% of 8",
+      "how": "`python -m evals.run` (held-out test half of evals/questions.jsonl). Low on purpose: this case is the model's job, not the gate's."
+    },
+    {
+      "metric": "Lead rules, precision",
+      "value": "100.0% (44 messages, 22 of them leads)",
+      "how": "`python -m evals.run` (held-out half of evals/lead_messages.jsonl)"
+    },
+    {
+      "metric": "Lead rules, recall",
+      "value": "81.8%",
+      "how": "`python -m evals.run` (same messages)"
+    },
+    {
+      "metric": "Mock writer: answer contains the fact stated on the website",
+      "value": "64.1% of 39 questions",
+      "how": "`python -m evals.run` (held-out test half of evals/questions.jsonl). The mock only quotes sentences; this is its ceiling, not the product's."
+    },
+    {
+      "metric": "Mock writer: follow-up questions answered",
+      "value": "7 of 10",
+      "how": "`python -m evals.run` (evals/followups.jsonl, used during development)"
+    },
+    {
+      "metric": "Search time per question",
+      "value": "5 ms",
+      "how": "`python -m evals.run` (8-core CPU)"
+    },
+    {
+      "metric": "First word on screen with the mock writer, median",
+      "value": "64 ms",
+      "how": "`python -m evals.run`"
+    },
+    {
+      "metric": "Widget file size",
+      "value": "18,107 bytes, 6,250 compressed",
+      "how": "`python -m evals.run`"
+    },
+    {
+      "metric": "Demo website crawled over HTTP",
+      "value": "14 pages, 66 passages, 1,632 words",
+      "how": "`python -m chatbot.cli ingest http://127.0.0.1:8022/demo/` against the running service"
+    },
+    {
+      "metric": "Local llama3.2 (3B): answer contains the fact on the website",
+      "value": "85.0% of 20 questions",
+      "how": "`OPENAI_BASE_URL=http://localhost:11434/v1 OPENAI_MODEL=llama3.2-cpu python -m evals.run --provider openai --limit 20` (local 3B model on CPU, no cost)"
+    },
+    {
+      "metric": "Local llama3.2 (3B): uncovered business questions flagged as not covered, with the form offered",
+      "value": "100.0% of 6",
+      "how": "`OPENAI_BASE_URL=http://localhost:11434/v1 OPENAI_MODEL=llama3.2-cpu python -m evals.run --provider openai --limit 20` (local 3B model on CPU, no cost)"
+    },
+    {
+      "metric": "Local llama3.2 (3B): follow-up questions answered",
+      "value": "5 of 5",
+      "how": "`OPENAI_BASE_URL=http://localhost:11434/v1 OPENAI_MODEL=llama3.2-cpu python -m evals.run --provider openai --limit 20` (local 3B model on CPU, no cost)"
+    },
+    {
+      "metric": "Local llama3.2 (3B): site questions refused, by the gate or by the model",
+      "value": "15.0% of 20",
+      "how": "`OPENAI_BASE_URL=http://localhost:11434/v1 OPENAI_MODEL=llama3.2-cpu python -m evals.run --provider openai --limit 20` (local 3B model on CPU, no cost)"
+    },
+    {
+      "metric": "Local llama3.2 (3B): sales tag added to an ordinary question",
+      "value": "40.0%",
+      "how": "`OPENAI_BASE_URL=http://localhost:11434/v1 OPENAI_MODEL=llama3.2-cpu python -m evals.run --provider openai --limit 20` (local 3B model on CPU, no cost). This is why the model's sales tags are off by default."
+    },
+    {
+      "metric": "Local llama3.2 (3B): first word, median",
+      "value": "9.9 s on a shared CPU",
+      "how": "`OPENAI_BASE_URL=http://localhost:11434/v1 OPENAI_MODEL=llama3.2-cpu python -m evals.run --provider openai --limit 20` (local 3B model on CPU, no cost)"
+    },
+    {
+      "metric": "Same model with tool calling instead of tags (first version)",
+      "value": "0% of 20 answers: it called the tool on all 28 questions that reached it and wrote nothing",
+      "how": "The same command at the earlier commit; kept as evals/report-live-llama3.2-toolcall-version.json"
+    }
+  ],
+  "client_qa": [
+    {
+      "q": "Will it make up prices or policies that are not on my website?",
+      "a": "It is built not to. The model is only shown passages from your own pages and is told to answer from them and nothing else. Before the model is even called, a relevance check refuses questions your site does not cover: in my tests it refused 93% of off-topic questions. When your site does not state something, the bot says it could not find it and offers to pass the question to your team. Every answer shows a link to the page it came from, so a visitor or you can check it in one click."
+    },
+    {
+      "q": "How do I put it on my website, and how long does it take?",
+      "a": "You add one line of code, a script tag, to your pages. It works on WordPress, Shopify, Webflow or a custom site, because it is plain JavaScript with no dependencies. On my side I point the crawler at your site address, it reads your pages in a few minutes, and I add your domain to the list of sites allowed to use the service. A first version on your real content is a matter of days, most of it spent checking answers with you."
+    },
+    {
+      "q": "What does it cost to run each month?",
+      "a": "Two things: a small server and the model. The server is a basic one, because search runs on CPU. For the model, each answer sends about a thousand words of your content and gets back a short reply. With a low-cost model such as GPT-4o-mini that is a fraction of a cent per answer, so a few thousand conversations a month cost a few dollars. I have not run the paid OpenAI path in this demo, so I would confirm that figure on your content in the first week. There is also a daily cap, so the bill has a ceiling you choose."
+    },
+    {
+      "q": "Where do the leads go?",
+      "a": "Each lead is saved with the full conversation and the list of pages the visitor asked about, then sent to the system you choose through a webhook: HubSpot, Zapier, Make, n8n, a Slack channel or an email. If your system is down, the lead is not lost, because it is stored first and sent second, with retries. There is also an admin page that lists the leads and exports them to a spreadsheet."
+    },
+    {
+      "q": "What happens when I change my website?",
+      "a": "The bot answers from a snapshot of your site, so after a change you run the crawl again. It is one command and takes minutes. In a real project I schedule it nightly, or trigger it when you publish. The admin page also shows the questions the bot could not answer, which tells you what to add to your site."
+    },
+    {
+      "q": "Could someone abuse the chat and run up my AI bill?",
+      "a": "There are four limits, and all of them are checked before the model is called. Only websites on your allow-list can use the chat from a browser. Each visitor is limited to a number of messages per minute. Long messages are rejected. And there is a daily cap for the whole site. Off-topic questions are refused without calling the model at all, so asking the bot to write essays costs you nothing."
+    },
+    {
+      "q": "What personal data do you store, and is that compatible with GDPR?",
+      "a": "The service stores the conversation text, a random session id, and the contact details a visitor chooses to give. The contact form has a consent box that must be ticked, and the consent is saved with the lead. Everything sits in your own database, not with a chat vendor. What goes to the AI provider is the question and passages from your public website. For a real deployment I would add a retention period and a delete-on-request command, and you would mention the chat in your privacy notice. I am a developer, not a lawyer, so your legal adviser has the last word."
+    },
+    {
+      "q": "Why build this when Intercom, Tidio or Crisp already sell chat widgets?",
+      "a": "If one of those fits, use it: they include a team inbox and live agents, and this does not. Building makes sense in three cases. You want the answers tied strictly to your own content with your own rules for when to refuse. You do not want to pay per seat or per resolved conversation every month. Or you want the conversations and leads in your own database, connected to your own systems. This project is that second option, and it is small enough that you can read all of it."
+    },
+    {
+      "q": "How do you know it works? Do you have numbers?",
+      "a": "Yes, and you can reproduce them with one command. I wrote 124 test questions and 90 visitor messages for the demo site and split them in two halves, so that choices are made on one half and results reported on the other. On the held-out half, the right page came back in the top three for 89.7% of questions, 93.3% of off-topic questions were refused, and the lead rules were right every time they fired while catching 81.8% of leads. The honest caveat is that I wrote those questions myself for a 14-page demo site. On your site I would collect real visitor questions in the first weeks and measure again."
+    },
+    {
+      "q": "What happens if OpenAI is down or slow?",
+      "a": "The visitor sees a polite message asking them to try again, not an error page, and the contact form still works because lead detection does not depend on the model. The model sits behind one small interface, so switching to another provider or to a local model is a setting, not a rewrite. The whole product also runs on a built-in offline writer, which is how the tests run without any key."
+    },
+    {
+      "q": "Will it slow down my website?",
+      "a": "No. The widget is one file of 18 KB, about 6 KB compressed, which is smaller than a typical image. It loads after your page with the defer attribute and does nothing until a visitor clicks it. It also keeps its styles separate from yours, so it cannot change how your page looks."
+    },
+    {
+      "q": "Can someone trick the bot with a message like 'ignore your instructions'?",
+      "a": "That is called prompt injection and there are three layers against it. Most such messages are off-topic and are refused before the model sees them. The model's instructions say that visitor messages and page content are information, not commands. And the bot cannot do anything dangerous: it has no tools at all, the only thing its answer can trigger is the contact form, and it reads the conversation history from the server, so a visitor cannot plant fake messages. No prompt is a guarantee, which is why the bot has no power to grant discounts or change orders."
+    },
+    {
+      "q": "Does it answer in other languages?",
+      "a": "This version is English only: the keyword search and the lead rules are written for English. A real model answers in the visitor's language by itself, and the meaning search can be switched to a multilingual model. The keyword part and the lead rules would need a version per language. I would scope that as a separate step and measure it on questions in that language."
+    },
+    {
+      "q": "Can a person take over the conversation?",
+      "a": "Not live, in this version. When a visitor asks for a person, the bot collects their details and sends the conversation to your team, who reply by email or phone. A live hand-over needs an agent inbox and a two-way connection. That is a reasonable next phase, or the point where connecting to an existing help desk tool makes more sense than building one."
+    }
+  ],
+  "concepts": [
+    {
+      "term": "RAG (retrieval-augmented generation)",
+      "plain": "Before the model answers, the system searches the website and hands the model the few passages that matter. The model writes the answer from those passages instead of from its memory."
+    },
+    {
+      "term": "Hallucination",
+      "plain": "A language model stating something false in a confident tone, such as a price the company never published. Giving the model the real text and telling it to refuse otherwise is how it is reduced."
+    },
+    {
+      "term": "Embedding",
+      "plain": "A list of numbers that represents the meaning of a text. Two texts about the same thing get similar numbers, so 'shipping cost' finds a page that says 'delivery fee'."
+    },
+    {
+      "term": "BM25 (keyword search)",
+      "plain": "The classic search formula: a passage scores higher when it contains the question's words, and rare words count more. It is exact and fast but does not understand synonyms."
+    },
+    {
+      "term": "Hybrid search and reciprocal rank fusion",
+      "plain": "Running keyword search and meaning search together and merging the two result lists. Rank fusion gives a passage points for its position in each list, so the two scores never have to be compared directly."
+    },
+    {
+      "term": "Passage (chunk)",
+      "plain": "A small piece of a page, here one section under a heading. Search returns passages, not whole pages, so the model reads only what is relevant."
+    },
+    {
+      "term": "Scope gate (relevance threshold)",
+      "plain": "A check before the model is called: if no passage is similar enough to the question, the bot says the site does not cover it. It costs nothing and stops off-topic use."
+    },
+    {
+      "term": "Streaming and server-sent events (SSE)",
+      "plain": "Sending the answer to the browser piece by piece as the model writes it, over an ordinary web connection. The visitor sees the first words in under a second instead of waiting for the whole reply."
+    },
+    {
+      "term": "Time to first token",
+      "plain": "How long the visitor waits before the first word appears. It matters more than total time for how fast a chatbot feels."
+    },
+    {
+      "term": "Widget and script tag",
+      "plain": "A widget is a small program that runs inside someone else's web page. A script tag is the one line of HTML that loads it."
+    },
+    {
+      "term": "Shadow DOM",
+      "plain": "A browser feature that gives a widget its own private area of the page. The site's styles cannot reach in and the widget's styles cannot leak out."
+    },
+    {
+      "term": "CORS and origin allow-list",
+      "plain": "Browsers tell a server which website a request comes from. The service only answers websites on its list, so nobody else can put the widget on their site at the owner's expense."
+    },
+    {
+      "term": "Rate limiting",
+      "plain": "A cap on how many messages one visitor can send per minute. It stops scripts and abuse from running up the bill."
+    },
+    {
+      "term": "Lead and lead capture",
+      "plain": "A lead is a potential customer who has left a way to be contacted. Lead capture is the moment the website gets those details, here through a form shown in the chat."
+    },
+    {
+      "term": "Intent detection",
+      "plain": "Working out what a visitor wants from their message. Here it means spotting buying interest or a request for a person."
+    },
+    {
+      "term": "Webhook",
+      "plain": "A message one system sends to another over the web when something happens. Here the chatbot posts each new lead to the client's CRM."
+    },
+    {
+      "term": "HMAC signature",
+      "plain": "A code computed from a message and a shared secret. The receiver recomputes it to be sure the message really came from the sender and was not changed."
+    },
+    {
+      "term": "Honeypot field",
+      "plain": "A form field hidden from people. Spam bots fill in every field, so a filled honeypot reveals a bot without bothering real visitors with a puzzle."
+    },
+    {
+      "term": "Tool calling (function calling)",
+      "plain": "Letting the model ask the program to do something by naming a function. I tried it for showing the contact form and dropped it: a small model called the tool every time and wrote no answer."
+    },
+    {
+      "term": "Control tag",
+      "plain": "A short marker such as [[SALES]] that the model adds at the end of its answer. The program removes it before the visitor sees it and uses it as a signal, here to show the contact form."
+    },
+    {
+      "term": "Prompt injection",
+      "plain": "A message written to make the model ignore its instructions. The defences are refusing off-topic messages, treating visitor text as information, and giving the bot no dangerous powers."
+    },
+    {
+      "term": "XSS (cross-site scripting)",
+      "plain": "An attack where text containing code gets run by the browser. The widget writes all text as plain text, so code in a message or an answer is displayed, not executed."
+    },
+    {
+      "term": "Crawler, sitemap and robots.txt",
+      "plain": "A crawler is a program that reads a website's pages. The sitemap is the site's own list of pages, and robots.txt says which pages programs may not read; the crawler follows both."
+    },
+    {
+      "term": "Mock provider",
+      "plain": "A stand-in for the paid model that works offline and always gives the same output. It lets anyone run and test the whole product without an API key."
+    },
+    {
+      "term": "Tokens and the output cap",
+      "plain": "Models bill by tokens, which are pieces of words. Capping the answer length caps the cost of each reply."
+    },
+    {
+      "term": "Precision and recall",
+      "plain": "Precision: when the system says 'this is a lead', how often it is right. Recall: of all real leads, how many it caught."
+    },
+    {
+      "term": "Dev and test split",
+      "plain": "The labelled questions are divided in two. Choices are made by looking at one half, and results are reported on the other, so the numbers are not flattered by tuning."
+    },
+    {
+      "term": "SQLite",
+      "plain": "A database that is a single file with no server to run. It is enough for one website's chat traffic and easy to move to PostgreSQL later."
+    }
+  ],
+  "limits": [
+    "The paid OpenAI path was not run in this build: OPENAI_API_KEY in the portfolio's .env file was empty. The real-model path was checked on a local 3B llama3.2 model through the same OpenAI-compatible interface, on a sample, at no cost.",
+    "The evaluation questions and visitor messages were written by me for a 14-page demo site, not collected from real visitors. Real traffic is messier and the thresholds should be measured again on it.",
+    "While improving the lead rules I had already seen the list of missed messages from the whole set before splitting it in two. I only added patterns for the dev-half misses, and test-half recall did not change (81.8% before and after), but the split is not perfectly blind.",
+    "The source links under an answer are the passages given to the model, not sentence-by-sentence citations. Nothing checks that each figure in a model's answer appears in a passage.",
+    "The relevance gate catches off-topic questions, not missing details on a covered subject: it refused only 37.5% of such questions. Declining those is left to the model, which the offline mock cannot do.",
+    "The offline mock writer quotes sentences from the site. It includes the expected fact in 64.1% of answers and cannot rephrase, combine facts or say that something is not stated.",
+    "The crawler reads the HTML the server sends. Pages that only appear after JavaScript runs, PDFs and pages behind a login are not read, and re-crawling is a command, not a schedule.",
+    "English only: the stop-word list, the stemmer and the lead rules are English.",
+    "The rate limit lives in memory and the daily budget in one SQLite file, so they are per process. Several servers need a shared store such as Redis.",
+    "The origin check stops other websites from using the widget in a browser. A script outside a browser can fake that header; the rate limit and the daily budget are what limit it.",
+    "One website per running service. Serving several client sites needs a site key on each request and one index per site.",
+    "An email address typed into the chat is stored as a lead without the consent tick box that the form has.",
+    "No live hand-over to a human agent, no conversation retention period and no delete-on-request command.",
+    "The local-model timings (about 10 seconds to the first word) come from a 3B model on a CPU shared with other jobs. They say nothing about a hosted model, which was not measured.",
+    "The small local model flags uncovered questions but does not always word them well: asked about PayPal it wrote 'we do not accept PayPal', which the site never says. A larger model should do better and that was not measured.",
+    "The local-model sample is 20 answers, 6 uncovered questions and 5 follow-ups, run once at temperature 0.2. A second run gave slightly different counts, so read those figures as approximate."
+  ],
+  "run": [
+    "cd /var/www/AB/github-projects/projects/22-website-chatbot",
+    ".venv/bin/python -m chatbot.cli serve                    # then open http://127.0.0.1:8022 and click the chat button",
+    ".venv/bin/python -m chatbot.cli ask \"How much is express delivery?\"",
+    ".venv/bin/python -m chatbot.cli search \"can I send a chair back\" -k 3",
+    ".venv/bin/python -m chatbot.cli ingest https://www.example.com   # index another website",
+    ".venv/bin/pytest -q                                       # the tests",
+    ".venv/bin/python -m evals.run                             # all the measured numbers",
+    ".venv/bin/python -m scripts.browser_check                 # the widget in a real browser (needs requirements-dev.txt)"
+  ],
+  "files": [
+    {
+      "path": "chatbot/engine.py",
+      "what": "The conversation engine: one visitor message in, a stream of events out. The most important file to understand."
+    },
+    {
+      "path": "chatbot/static/widget.js",
+      "what": "The embeddable widget: chat button, panel, streamed replies, source links, contact form."
+    },
+    {
+      "path": "chatbot/leads.py",
+      "what": "Lead rules, contact-detail extraction, form validation and the signed webhook."
+    },
+    {
+      "path": "chatbot/llm.py",
+      "what": "The answer writers (offline mock and OpenAI-compatible), the prompt, the tag filter and cost tracking."
+    },
+    {
+      "path": "chatbot/crawl.py",
+      "what": "The crawler: sitemap, robots.txt, same-site links, and HTML cleaned into sections."
+    },
+    {
+      "path": "chatbot/index.py",
+      "what": "The site index and the hybrid search (keywords, meaning, rank fusion)."
+    },
+    {
+      "path": "chatbot/chunking.py",
+      "what": "Splits pages into passages at their headings."
+    },
+    {
+      "path": "chatbot/bm25.py",
+      "what": "Keyword search, written out in full."
+    },
+    {
+      "path": "chatbot/embed.py",
+      "what": "The embedding model and the offline stand-in, with their measured thresholds."
+    },
+    {
+      "path": "chatbot/guards.py",
+      "what": "The rate limiter and the origin check."
+    },
+    {
+      "path": "chatbot/store.py",
+      "what": "SQLite storage for conversations, leads and unanswered questions."
+    },
+    {
+      "path": "chatbot/api.py",
+      "what": "The web service: chat stream, lead endpoint, admin API, widget file and demo site."
+    },
+    {
+      "path": "chatbot/cli.py",
+      "what": "Commands: serve, ingest, search, ask, leads."
+    },
+    {
+      "path": "chatbot/config.py",
+      "what": "All settings, read from environment variables."
+    },
+    {
+      "path": "chatbot/static/admin.html",
+      "what": "The admin page: leads, conversations, unanswered questions, CSV export."
+    },
+    {
+      "path": "demo_site/",
+      "what": "The fictional company's 14-page website that the demo bot answers about."
+    },
+    {
+      "path": "scripts/build_demo_site.py",
+      "what": "Generates the demo website, with realistic menus and banners for the crawler to remove."
+    },
+    {
+      "path": "scripts/browser_check.py",
+      "what": "Drives the widget in a headless browser and takes the screenshots."
+    },
+    {
+      "path": "scripts/webhook_receiver.py",
+      "what": "A sample lead receiver that verifies the webhook signature."
+    },
+    {
+      "path": "evals/run.py",
+      "what": "The evaluation script that produces every number in the README."
+    },
+    {
+      "path": "evals/questions.jsonl",
+      "what": "124 labelled questions: 78 about the site, 30 off-topic, 16 about the business but not on the site."
+    },
+    {
+      "path": "evals/lead_messages.jsonl",
+      "what": "90 visitor messages labelled lead or not lead."
+    },
+    {
+      "path": "evals/report-fastembed.json",
+      "what": "The full evaluation report, with every answer and every miss."
+    },
+    {
+      "path": "tests/",
+      "what": "84 offline tests: crawler, search, engine, leads, API and guards."
+    },
+    {
+      "path": "README.md",
+      "what": "The page a client sees on GitHub."
+    }
+  ],
   "verification": {
-    "tests": "",
+    "tests": "84 passed (pytest, offline, no key)",
     "live_llm": "pending",
     "cost_usd": 0,
-    "notes": "Build in progress."
+    "notes": "The OpenAI live check is pending: OPENAI_API_KEY in /var/www/AB/github-projects/.env was empty during the build, so no request was sent and nothing was spent. The real-model path (OpenAI-compatible client, streaming, prompt, tags) was run at no cost on local llama3.2 (3B) through Ollama: 85.0% of 20 sampled answers contained the fact from the website, 6 of 6 uncovered questions were flagged, 5 of 5 follow-ups were answered, and the first word took a median of 9.9 s on a shared CPU. That run found a real defect in the first design: with tool calling the model wrote no answer on all 28 questions that reached it, so tool calling was replaced by a tag in the answer text. It also showed the model adding a sales tag to 40% of ordinary questions, so the model's sales tags are off by default and the rules decide. Also verified: a fresh clone installed from requirements.txt and passed the 84 tests; the quick start served the demo site; the crawler indexed the running demo over HTTP (14 pages, 66 passages); 15 of 15 headless-browser checks passed; the lead webhook was received by the sample receiver with a valid signature; the Docker image was built and answered a question, then removed. To finish the pending check: put a key in .env and run `OPENAI_API_KEY=... python -m evals.run --provider openai --limit 20` (estimated at well under one cent on gpt-4o-mini)."
   }
 }

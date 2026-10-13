@@ -42,7 +42,7 @@ def index() -> SiteIndex:
 @pytest.fixture
 def settings(tmp_path: Path) -> Settings:
     return Settings(embedder="hash", llm_provider="mock", mock_delay_ms=0, db_path=str(tmp_path / "chat.sqlite3"),
-                    index_dir=str(tmp_path / "index"), admin_token="test-token")
+                    index_dir=str(tmp_path / "index"), admin_token="test-token", model_lead_tags=True)
 
 
 @pytest.fixture

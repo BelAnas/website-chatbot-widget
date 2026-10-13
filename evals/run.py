@@ -109,6 +109,9 @@ async def answer_metrics(engine: ChatEngine, rows: list[dict], tag: str) -> tupl
     for i, row in enumerate(rows):
         turn = await run_turn(engine, f"eval-{tag}-{i:04d}", row["q"])
         results.append({"q": row["q"], "answer": turn["answer"], "kind": turn["kind"], "sources": turn["sources"],
+                        # The form appeared although the rules saw no lead: the model's tag did it.
+                        "sales_tag_without_rule": turn["lead_prompt"] in ("buying_interest", "wants_human")
+                        and detect_intent(row["q"]) is None,
                         "fact": has_fact(turn["answer"], row["facts"]),
                         "right_source": any(p in row["pages"] for p in turn["sources"]),
                         "first_token_ms": turn["first_token_ms"], "total_ms": turn["total_ms"],
@@ -117,7 +120,8 @@ async def answer_metrics(engine: ChatEngine, rows: list[dict], tag: str) -> tupl
     summary = {"questions": n,
                "answer_has_the_fact_pct": pct(sum(r["fact"] for r in results), n),
                "right_page_linked_pct": pct(sum(r["right_source"] for r in results), n),
-               "wrongly_refused_pct": pct(sum(r["kind"] == "refusal" for r in results), n)}
+               "wrongly_refused_pct": pct(sum(r["kind"] == "refusal" for r in results), n),
+               "sales_tag_on_ordinary_question_pct": pct(sum(r["sales_tag_without_rule"] for r in results), n)}
     return summary, results
 
 
@@ -166,6 +170,7 @@ async def main_async(args: argparse.Namespace) -> dict:
     settings = Settings.from_env()
     settings.embedder, settings.mock_delay_ms = args.embedder, 0
     settings.llm_provider = args.provider
+    settings.model_lead_tags = True     # measured here even though it is off by default
     embedder = make_embedder(settings.embedder, settings.embedding_model)
     index = SiteIndex.build(load_directory(ROOT / "demo_site", "/demo"), embedder, "demo_site")
     questions = load("questions.jsonl")

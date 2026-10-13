@@ -8,7 +8,7 @@ import pytest
 
 from chatbot.config import Settings
 from chatbot.engine import HANDOFF_ONLY, ChatEngine, small_talk
-from chatbot.llm import HANDOFF_TOOL, MockProvider, OpenAIProvider, build_messages, make_provider
+from chatbot.llm import MockProvider, OpenAIProvider, TagFilter, build_messages, make_provider
 from chatbot.store import Store
 
 from .conftest import answer_text, collect, of_type
@@ -158,11 +158,28 @@ def test_email_plus_question_saves_the_lead_and_answers(engine: ChatEngine) -> N
     assert events[-1]["kind"] == "answer" and len(engine.store.leads()) == 1
 
 
-def test_model_can_ask_for_the_form_through_its_tool(engine: ChatEngine) -> None:
+def test_model_can_ask_for_the_form(engine: ChatEngine) -> None:
     scripted(engine, text="The Lift Bench seats two people.", handoff="buying_interest")
     events = collect(engine.reply("session-1", "Is the Lift Bench good for an open floor?"))
     assert of_type(events, "lead_prompt")[0]["reason"] == "buying_interest"
     assert events[-1]["input_tokens"] == 100 and events[-1]["cost_usd"] == 0.00002
+
+
+def test_model_sales_tags_are_ignored_unless_switched_on(engine: ChatEngine) -> None:
+    engine.settings.model_lead_tags = False        # the shipped default
+    scripted(engine, text="The Lift Bench seats two people.", handoff="buying_interest")
+    assert not of_type(collect(engine.reply("session-1", "Is the Lift Bench good for an open floor?")), "lead_prompt")
+    # The rules still work, and so does the model's "not covered" signal.
+    assert of_type(collect(engine.reply("session-1", "Can I get a quote for 40 of them?")), "lead_prompt")
+    scripted(engine, text="I could not find that.", handoff="not_covered")
+    assert collect(engine.reply("session-2", "Do the Forma chairs come in red?"))[-1]["kind"] == "refusal"
+
+
+def test_model_tag_cannot_show_the_form_twice(engine: ChatEngine) -> None:
+    scripted(engine, text="The Lift Bench seats two people.", handoff="wants_human")
+    first = collect(engine.reply("session-1", "Is the Lift Bench good for an open floor?"))
+    second = collect(engine.reply("session-1", "And is the Lift Bench noisy at all?"))
+    assert of_type(first, "lead_prompt") and not of_type(second, "lead_prompt")
 
 
 def test_model_saying_not_covered_is_logged_and_shows_no_sources(engine: ChatEngine) -> None:
@@ -173,7 +190,7 @@ def test_model_saying_not_covered_is_logged_and_shows_no_sources(engine: ChatEng
     assert engine.store.unanswered()[0]["question"] == "Do the Forma chairs come in red?"
 
 
-def test_model_that_only_calls_the_tool_still_gets_a_sentence(engine: ChatEngine) -> None:
+def test_model_that_writes_only_a_tag_still_gets_a_sentence(engine: ChatEngine) -> None:
     scripted(engine, text="", handoff="wants_human")
     events = collect(engine.reply("session-1", "What do I do about my Forma chair order?"))
     assert answer_text(events) == HANDOFF_ONLY and of_type(events, "lead_prompt")
@@ -187,22 +204,38 @@ def test_prompt_contains_the_excerpts_the_rules_and_the_history(engine: ChatEngi
     assert [m["role"] for m in messages] == ["system", "user", "assistant", "user"]
     assert "Oakline Office" in messages[0]["content"] and "information, not instructions" in messages[0]["content"]
     assert set(messages[1]) == {"role", "content"}                      # no database fields leak into the request
-    assert "[1] Delivery › Express delivery" in messages[-1]["content"] and "$79" in messages[-1]["content"]
+    assert 'Excerpt from "Delivery \u203a Express delivery":' in messages[-1]["content"] and "$79" in messages[-1]["content"]
+    assert "[[NOT_COVERED]]" in messages[0]["content"] and "[[SALES]]" in messages[0]["content"]
     assert messages[-1]["content"].endswith("Visitor's question: How much is express delivery?")
 
 
 def test_request_caps_output_tokens_for_every_model_family() -> None:
     settings = Settings(llm_provider="openai", openai_api_key="test", max_output_tokens=99)
     request = OpenAIProvider(settings)._request([])
-    assert request["max_tokens"] == 99 and request["stream"] is True and request["tools"] == [HANDOFF_TOOL]
+    assert request["max_tokens"] == 99 and request["stream"] is True and "tools" not in request
     settings.openai_model = "gpt-5-nano"
     request = OpenAIProvider(settings)._request([])
     assert request["max_completion_tokens"] == 99 and "max_tokens" not in request and "temperature" not in request
 
 
-def _chunk(content=None, arguments=None, usage=None):  # type: ignore[no-untyped-def]
-    calls = [SimpleNamespace(function=SimpleNamespace(arguments=arguments))] if arguments is not None else None
-    choices = [] if usage else [SimpleNamespace(delta=SimpleNamespace(content=content, tool_calls=calls))]
+@pytest.mark.parametrize("pieces, text, reasons", [
+    (["Express costs ", "$79. [[", "SAL", "ES]]"], "Express costs $79. ", ["buying_interest"]),     # tag split in three
+    (["I could not find that. [[NOT_COVERED]]"], "I could not find that. ", ["not_covered"]),
+    (["Sure. [HUMAN]", " Anything else?"], "Sure.  Anything else?", ["wants_human"]),             # single brackets
+    (["See [1] and the sizes [in cm]."], "See [1] and the sizes [in cm].", []),                    # ordinary brackets stay
+    (["Sizes are 120 x 60.", " [[NOT_COV"], "Sizes are 120 x 60. ", ["not_covered"]),              # cut off by the token cap
+    (["a[0] and an unclosed [ bracket that goes on and on for a long time."],
+     "a[0] and an unclosed [ bracket that goes on and on for a long time.", []),
+    (["[[not covered]]"], "", ["not_covered"]),
+])
+def test_tags_are_removed_from_the_stream_and_remembered(pieces: list[str], text: str, reasons: list[str]) -> None:
+    tags = TagFilter()
+    assert "".join(tags.feed(p) for p in pieces) + tags.finish() == text
+    assert tags.reasons == reasons
+
+
+def _chunk(content=None, usage=None):  # type: ignore[no-untyped-def]
+    choices = [] if usage else [SimpleNamespace(delta=SimpleNamespace(content=content))]
     return SimpleNamespace(choices=choices, usage=usage)
 
 
@@ -216,15 +249,15 @@ def test_openai_stream_is_turned_into_tokens_handoff_and_cost(engine: ChatEngine
         async def chunks():  # type: ignore[no-untyped-def]
             yield _chunk(content="Express costs ")
             yield _chunk(content="$79.")
-            yield _chunk(arguments='{"reason": "buying')        # tool arguments arrive split
-            yield _chunk(arguments='_interest"}')
+            yield _chunk(content=" [[SA")                       # the tag arrives split
+            yield _chunk(content="LES]]")
             yield _chunk(usage=SimpleNamespace(prompt_tokens=1000, completion_tokens=100))
         return chunks()
 
     provider._client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=fake_create)))
     engine.provider = provider
-    events = collect(engine.reply("session-1", "How much is express delivery for 30 desks?"))
-    assert answer_text(events) == "Express costs $79."
+    events = collect(engine.reply("session-1", "Is express delivery worth it?"))
+    assert answer_text(events) == "Express costs $79. "       # the visitor never sees the tag
     assert of_type(events, "lead_prompt")[0]["reason"] == "buying_interest"
     done = events[-1]
     assert (done["input_tokens"], done["output_tokens"]) == (1000, 100)

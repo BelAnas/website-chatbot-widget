@@ -1,0 +1,471 @@
+{
+  "embedder": "BAAI/bge-small-en-v1.5",
+  "provider": "openai",
+  "model": "llama3.2-cpu",
+  "search_mode": "hybrid",
+  "index": {
+    "pages": 14,
+    "passages": 66,
+    "words": 1632
+  },
+  "answers_test_sample": {
+    "questions": 20,
+    "answer_has_the_fact_pct": 85.0,
+    "right_page_linked_pct": 85.0,
+    "wrongly_refused_pct": 15.0,
+    "sales_tag_on_ordinary_question_pct": 40.0
+  },
+  "uncovered_test_sample": {
+    "questions": 6,
+    "refused_pct": 100.0
+  },
+  "follow_ups_sample": {
+    "follow_ups": 5,
+    "follow_up_answered_pct": 100.0,
+    "new_topics": 0,
+    "new_topic_answered_pct": 0.0
+  },
+  "first_word_ms_median": 9883.5,
+  "full_answer_ms_median": 15740.8,
+  "input_tokens": 8761,
+  "output_tokens": 729,
+  "cost_usd": 0.0,
+  "wall_time_s": 546.7,
+  "details": {
+    "answers": [
+      {
+        "q": "What's the price of the Lift Pro?",
+        "answer": "The price of the Lift Pro is $689. ",
+        "kind": "answer",
+        "sources": [
+          "standing-desks",
+          "standing-desks"
+        ],
+        "sales_tag_without_rule": true,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 1863.7,
+        "total_ms": 3922.2,
+        "input_tokens": 496,
+        "output_tokens": 15,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "how low and how high does the Lift One go",
+        "answer": "The Lift One desktop adjusts in height from 72 cm to 118 cm. It lifts up to 70 kg. There is an up and down button for adjusting its height.",
+        "kind": "answer",
+        "sources": [
+          "standing-desks",
+          "standing-desks"
+        ],
+        "sales_tag_without_rule": false,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 12821.6,
+        "total_ms": 19141.5,
+        "input_tokens": 514,
+        "output_tokens": 37,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "does the pro remember my height settings",
+        "answer": "I could not find that on the Oakline Office website, so I would rather not guess.",
+        "kind": "refusal",
+        "sources": [],
+        "sales_tag_without_rule": false,
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 9.1,
+        "total_ms": 9.5,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "what wood options are there for the table top",
+        "answer": "We offer three wood veneer options for our desktops: oak veneer, walnut veneer, and white laminate. The price is the same for all three options. The laminate top is the most scratch resistant and is recommended for shared desks.",
+        "kind": "answer",
+        "sources": [
+          "standing-desks",
+          "sustainability"
+        ],
+        "sales_tag_without_rule": false,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 11161.7,
+        "total_ms": 18755.1,
+        "input_tokens": 468,
+        "output_tokens": 50,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "How much electricity does a standing desk use when idle?",
+        "answer": "The desks plug into a standard wall outlet and use 0.1 W on standby. This is a very low power consumption. The noise level of the motors is also quite quiet, under 45 decibels.",
+        "kind": "answer",
+        "sources": [
+          "standing-desks",
+          "standing-desks"
+        ],
+        "sales_tag_without_rule": false,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 9517.7,
+        "total_ms": 16038.0,
+        "input_tokens": 456,
+        "output_tokens": 45,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "price of the forma chair",
+        "answer": "The Forma task chair costs $329. It is rated for users up to 125 kg. This price does not include any discounts or promotions that may be available. ",
+        "kind": "answer",
+        "sources": [
+          "chairs",
+          "chairs"
+        ],
+        "sales_tag_without_rule": true,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 10137.7,
+        "total_ms": 15422.0,
+        "input_tokens": 465,
+        "output_tokens": 39,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "weight limit forma plus",
+        "answer": "The Forma Plus has a weight limit of 150 kg. It is also recommended for people taller than 190 cm. The Forma, on the other hand, has a weight limit of 125 kg. ",
+        "kind": "answer",
+        "sources": [
+          "chairs",
+          "chairs"
+        ],
+        "sales_tag_without_rule": true,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 11295.4,
+        "total_ms": 18598.1,
+        "input_tokens": 498,
+        "output_tokens": 48,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "what colors can I get the seat in",
+        "answer": "You can choose from four seat fabric colours: charcoal, navy, forest green, and sand. All of these colours are rated for 100,000 rub cycles, suitable for heavy commercial use.",
+        "kind": "answer",
+        "sources": [
+          "chairs",
+          "chairs"
+        ],
+        "sales_tag_without_rule": false,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 9708.3,
+        "total_ms": 15443.6,
+        "input_tokens": 461,
+        "output_tokens": 40,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "does the forma have lumbar support",
+        "answer": "The Forma task chair has adjustable lumbar support. It is one of its key features. The seat also slides to fit different leg lengths.",
+        "kind": "answer",
+        "sources": [
+          "chairs",
+          "chairs"
+        ],
+        "sales_tag_without_rule": false,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 10000.6,
+        "total_ms": 14093.2,
+        "input_tokens": 469,
+        "output_tokens": 30,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "how much is the under-desk drawer unit",
+        "answer": "The Stow pedestal costs $149. It has three drawers, a central lock and fits under every Lift desk.",
+        "kind": "answer",
+        "sources": [
+          "storage",
+          "storage"
+        ],
+        "sales_tag_without_rule": false,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 10396.5,
+        "total_ms": 13640.6,
+        "input_tokens": 467,
+        "output_tokens": 24,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "can lockers be stacked",
+        "answer": "Yes, according to our website, banks of lockers can be stacked two high. Additionally, a bank of four lockers costs $399. Lockers can also be bolted together side by side. ",
+        "kind": "answer",
+        "sources": [
+          "storage",
+          "index"
+        ],
+        "sales_tag_without_rule": true,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 8128.8,
+        "total_ms": 14433.3,
+        "input_tokens": 432,
+        "output_tokens": 46,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "something to reduce noise between desks?",
+        "answer": "We have acoustic desk screens that can help reduce speech noise between neighbouring desks. They cost $89 each and are made from recycled felt. They clamp onto any desktop between 18 and 40 mm thick. ",
+        "kind": "answer",
+        "sources": [
+          "storage",
+          "standing-desks"
+        ],
+        "sales_tag_without_rule": true,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 8831.9,
+        "total_ms": 15253.1,
+        "input_tokens": 439,
+        "output_tokens": 46,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "what discount do I get on 30 chairs",
+        "answer": "Unfortunately, the website excerpts don't mention a specific discount for bulk orders of 30 chairs or more. However, it does mention that companies planning to order 10 chairs or more can borrow a sample chair for free. ",
+        "kind": "refusal",
+        "sources": [],
+        "sales_tag_without_rule": false,
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 8710.5,
+        "total_ms": 18317.7,
+        "input_tokens": 440,
+        "output_tokens": 51,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "How fast do you send a quotation",
+        "answer": "We send a written quote within one business day. A quote is valid for 30 days and fixes the price even if our list prices change.",
+        "kind": "answer",
+        "sources": [
+          "bulk-orders",
+          "returns"
+        ],
+        "sales_tag_without_rule": false,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 9856.5,
+        "total_ms": 15146.2,
+        "input_tokens": 447,
+        "output_tokens": 30,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "can we test a chair before ordering lots",
+        "answer": "You can borrow a sample chair for 14 days, free of charge, if you're planning to order 10 chairs or more. We deliver and collect the sample ourselves. This way, you can try out the chair before making a larger purchase. ",
+        "kind": "answer",
+        "sources": [
+          "bulk-orders",
+          "showroom"
+        ],
+        "sales_tag_without_rule": true,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 8579.3,
+        "total_ms": 21477.2,
+        "input_tokens": 418,
+        "output_tokens": 55,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "how much is shipping",
+        "answer": "Shipping costs vary depending on the delivery method. For standard orders over $500, it's free, while below that amount it's $39. Express delivery costs $79 and has a flat rate for in-stock items.",
+        "kind": "answer",
+        "sources": [
+          "delivery",
+          "delivery"
+        ],
+        "sales_tag_without_rule": false,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 9910.4,
+        "total_ms": 18406.7,
+        "input_tokens": 427,
+        "output_tokens": 45,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "cost of fast delivery",
+        "answer": "Express delivery costs $79 and arrives in 2 to 3 business days. ",
+        "kind": "answer",
+        "sources": [
+          "delivery",
+          "delivery"
+        ],
+        "sales_tag_without_rule": true,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 5476.2,
+        "total_ms": 9381.8,
+        "input_tokens": 427,
+        "output_tokens": 21,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "will the driver carry the boxes into our office",
+        "answer": "Yes, if you order an extra $49 per order, the carrier will bring the boxes into the room you choose instead of leaving them at the entrance. The cost is $49 per order. This service is available for all orders. ",
+        "kind": "answer",
+        "sources": [
+          "delivery",
+          "index"
+        ],
+        "sales_tag_without_rule": true,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 10657.2,
+        "total_ms": 20313.4,
+        "input_tokens": 462,
+        "output_tokens": 52,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "lead time for a 60 desk order",
+        "answer": "We do not have information on the lead time for a large order of 60 desks on our website. ",
+        "kind": "refusal",
+        "sources": [],
+        "sales_tag_without_rule": false,
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 12780.7,
+        "total_ms": 17960.1,
+        "input_tokens": 493,
+        "output_tokens": 28,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "how long does it take to put a desk together",
+        "answer": "It takes about 25 minutes to assemble a desk without tools, and chairs can be assembled in about 5 minutes without tools.",
+        "kind": "answer",
+        "sources": [
+          "assembly",
+          "assembly"
+        ],
+        "sales_tag_without_rule": false,
+        "fact": true,
+        "right_source": true,
+        "first_token_ms": 12348.5,
+        "total_ms": 16975.7,
+        "input_tokens": 482,
+        "output_tokens": 27,
+        "cost_usd": 0.0
+      }
+    ],
+    "uncovered": [
+      {
+        "q": "Do you sell monitor arms?",
+        "answer": "We do not have monitor arms in our range. Our products include height-adjustable standing desks, ergonomic task chairs, lockers, pedestals and acoustic desk screens, but no monitor arms. ",
+        "kind": "refusal",
+        "cost_usd": 0.0,
+        "refused": true
+      },
+      {
+        "q": "Do you have a store in Chicago?",
+        "answer": "I could not find that on the Oakline Office website, so I would rather not guess.",
+        "kind": "refusal",
+        "cost_usd": 0.0,
+        "refused": true
+      },
+      {
+        "q": "Is the Lift Pro frame available in black?",
+        "answer": "I could not find that on the Oakline Office website, so I would rather not guess.",
+        "kind": "refusal",
+        "cost_usd": 0.0,
+        "refused": true
+      },
+      {
+        "q": "Can I pay with PayPal?",
+        "answer": "We do not accept PayPal as a payment method on our website. We accept Visa, Mastercard and American Express, and bank transfer for orders over $1,000. ",
+        "kind": "refusal",
+        "cost_usd": 0.0,
+        "refused": true
+      },
+      {
+        "q": "Do you sell sofas for reception areas?",
+        "answer": "No, we don't sell sofas for reception areas. Our range covers height-adjustable standing desks, ergonomic task chairs, lockers, pedestals and acoustic desk screens. Everything is sold per item on this website and at volume prices for teams of ten or more .",
+        "kind": "refusal",
+        "cost_usd": 0.0,
+        "refused": true
+      },
+      {
+        "q": "Are your desks made in the USA?",
+        "answer": "We could not find this information on the website. ",
+        "kind": "refusal",
+        "cost_usd": 0.0,
+        "refused": true
+      }
+    ],
+    "follow_ups": [
+      {
+        "first": "Tell me about the Lift Pro",
+        "followup": "how much is it?",
+        "facts": [
+          "$689"
+        ],
+        "depends_on_first": true,
+        "answer": "The Lift Pro costs $689. ",
+        "fact": true,
+        "cost_usd": 0.0
+      },
+      {
+        "first": "What is the Forma chair?",
+        "followup": "and what's the weight limit?",
+        "facts": [
+          "125 kg"
+        ],
+        "depends_on_first": true,
+        "answer": "The Forma task chair is rated for users up to 125 kg. The Forma Plus has a higher weight limit of 150 kg. It also requires users over 190 cm tall to use the Forma Plus model. ",
+        "fact": true,
+        "cost_usd": 0.0
+      },
+      {
+        "first": "How much is standard delivery?",
+        "followup": "and express?",
+        "facts": [
+          "$79"
+        ],
+        "depends_on_first": true,
+        "answer": "Express delivery costs $79 and arrives in 2 to 3 business days. ",
+        "fact": true,
+        "cost_usd": 0.0
+      },
+      {
+        "first": "Do you have lockers?",
+        "followup": "can they be stacked?",
+        "facts": [
+          "two high"
+        ],
+        "depends_on_first": true,
+        "answer": "Yes, our lockers can be stacked two high. A bank of four lockers costs $399. Banks can be bolted together side by side or stacked two high.",
+        "fact": true,
+        "cost_usd": 0.0
+      },
+      {
+        "first": "What's your returns policy?",
+        "followup": "who pays for that?",
+        "facts": [
+          "$25",
+          "free"
+        ],
+        "depends_on_first": true,
+        "answer": "According to our website, if you're returning an item due to a fault or damage, we cover the cost. For other reasons, you pay the pickup fee of $25 per item. ",
+        "fact": true,
+        "cost_usd": 0.0
+      }
+    ]
+  }
+}

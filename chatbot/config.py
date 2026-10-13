@@ -47,6 +47,10 @@ class Settings:
     max_output_tokens: int = 220
     llm_timeout_s: float = 60
     mock_delay_ms: int = 12               # pause between words, so the mock visibly streams
+    # Let the model's [[SALES]] / [[HUMAN]] tags show the contact form. Off by default: on the one
+    # real model measured here they fired on ordinary questions too often (see the README).
+    # The lead rules and the model's [[NOT_COVERED]] tag are always active.
+    model_lead_tags: bool = False
 
     # --- search ---
     embedder: str = "fastembed"           # fastembed | hash
@@ -83,8 +87,8 @@ class Settings:
         _load_dotenv(ROOT / ".env")
         d = cls()
         return cls(
-            site_name=_env("SITE_NAME", d.site_name),
-            site_source=_env("SITE_SOURCE", d.site_source),
+            site_name=_env("SITE_NAME") or d.site_name,
+            site_source=_env("SITE_SOURCE") or d.site_source,
             site_base_url=_env("SITE_BASE_URL", d.site_base_url),
             max_pages=int(_env("MAX_PAGES", str(d.max_pages))),
             llm_provider=_env("LLM_PROVIDER", d.llm_provider).lower(),
@@ -93,6 +97,7 @@ class Settings:
             openai_base_url=_env("OPENAI_BASE_URL"),
             max_output_tokens=int(_env("MAX_OUTPUT_TOKENS", str(d.max_output_tokens))),
             llm_timeout_s=float(_env("LLM_TIMEOUT_S", str(d.llm_timeout_s))),
+            model_lead_tags=_env("MODEL_LEAD_TAGS").lower() in ("1", "true", "yes", "on"),
             mock_delay_ms=int(_env("MOCK_DELAY_MS", str(d.mock_delay_ms))),
             embedder=_env("EMBEDDER", d.embedder).lower(),
             embedding_model=_env("EMBEDDING_MODEL", d.embedding_model),

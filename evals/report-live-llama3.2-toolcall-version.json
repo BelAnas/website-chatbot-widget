@@ -1,0 +1,399 @@
+{
+  "embedder": "BAAI/bge-small-en-v1.5",
+  "provider": "openai",
+  "model": "llama3.2-cpu",
+  "search_mode": "hybrid",
+  "index": {
+    "pages": 14,
+    "passages": 66,
+    "words": 1632
+  },
+  "answers_test_sample": {
+    "questions": 20,
+    "answer_has_the_fact_pct": 0.0,
+    "right_page_linked_pct": 0.0,
+    "wrongly_refused_pct": 100.0
+  },
+  "uncovered_test_sample": {
+    "questions": 6,
+    "refused_pct": 100.0
+  },
+  "follow_ups_sample": {
+    "follow_ups": 5,
+    "follow_up_answered_pct": 0.0,
+    "new_topics": 0,
+    "new_topic_answered_pct": 0.0
+  },
+  "first_word_ms_median": 9550.9,
+  "full_answer_ms_median": 9551.1,
+  "input_tokens": 10916,
+  "output_tokens": 321,
+  "cost_usd": 0.0,
+  "wall_time_s": 372.0,
+  "details": {
+    "answers": [
+      {
+        "q": "What's the price of the Lift Pro?",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 17911.1,
+        "total_ms": 17911.4,
+        "input_tokens": 610,
+        "output_tokens": 18,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "how low and how high does the Lift One go",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 10479.6,
+        "total_ms": 10479.9,
+        "input_tokens": 628,
+        "output_tokens": 18,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "does the pro remember my height settings",
+        "answer": "I could not find that on the Oakline Office website, so I would rather not guess.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 9.3,
+        "total_ms": 9.6,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "what wood options are there for the table top",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 9130.5,
+        "total_ms": 9130.7,
+        "input_tokens": 582,
+        "output_tokens": 15,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "How much electricity does a standing desk use when idle?",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 11572.1,
+        "total_ms": 11572.3,
+        "input_tokens": 570,
+        "output_tokens": 15,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "price of the forma chair",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 12582.0,
+        "total_ms": 12582.1,
+        "input_tokens": 579,
+        "output_tokens": 19,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "weight limit forma plus",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 10970.1,
+        "total_ms": 10970.3,
+        "input_tokens": 612,
+        "output_tokens": 18,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "what colors can I get the seat in",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 8514.5,
+        "total_ms": 8514.7,
+        "input_tokens": 574,
+        "output_tokens": 15,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "does the forma have lumbar support",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 10732.8,
+        "total_ms": 10733.1,
+        "input_tokens": 582,
+        "output_tokens": 15,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "how much is the under-desk drawer unit",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 11605.7,
+        "total_ms": 11606.0,
+        "input_tokens": 581,
+        "output_tokens": 18,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "can lockers be stacked",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 8052.4,
+        "total_ms": 8052.6,
+        "input_tokens": 546,
+        "output_tokens": 19,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "something to reduce noise between desks?",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 9077.0,
+        "total_ms": 9077.3,
+        "input_tokens": 553,
+        "output_tokens": 18,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "what discount do I get on 30 chairs",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 8229.6,
+        "total_ms": 8229.7,
+        "input_tokens": 554,
+        "output_tokens": 19,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "How fast do you send a quotation",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 8828.6,
+        "total_ms": 8828.8,
+        "input_tokens": 560,
+        "output_tokens": 18,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "can we test a chair before ordering lots",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 7302.6,
+        "total_ms": 7302.8,
+        "input_tokens": 532,
+        "output_tokens": 15,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "how much is shipping",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 8438.1,
+        "total_ms": 8438.4,
+        "input_tokens": 539,
+        "output_tokens": 18,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "cost of fast delivery",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 6308.1,
+        "total_ms": 6308.3,
+        "input_tokens": 539,
+        "output_tokens": 18,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "will the driver carry the boxes into our office",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 9971.3,
+        "total_ms": 9971.5,
+        "input_tokens": 576,
+        "output_tokens": 15,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "lead time for a 60 desk order",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 10687.2,
+        "total_ms": 10687.4,
+        "input_tokens": 604,
+        "output_tokens": 15,
+        "cost_usd": 0.0
+      },
+      {
+        "q": "how long does it take to put a desk together",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "sources": [],
+        "fact": false,
+        "right_source": false,
+        "first_token_ms": 10057.2,
+        "total_ms": 10057.4,
+        "input_tokens": 595,
+        "output_tokens": 15,
+        "cost_usd": 0.0
+      }
+    ],
+    "uncovered": [
+      {
+        "q": "Do you sell monitor arms?",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "cost_usd": 0.0,
+        "refused": true
+      },
+      {
+        "q": "Do you have a store in Chicago?",
+        "answer": "I could not find that on the Oakline Office website, so I would rather not guess.",
+        "kind": "refusal",
+        "cost_usd": 0.0,
+        "refused": true
+      },
+      {
+        "q": "Is the Lift Pro frame available in black?",
+        "answer": "I could not find that on the Oakline Office website, so I would rather not guess.",
+        "kind": "refusal",
+        "cost_usd": 0.0,
+        "refused": true
+      },
+      {
+        "q": "Can I pay with PayPal?",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "cost_usd": 0.0,
+        "refused": true
+      },
+      {
+        "q": "Do you sell sofas for reception areas?",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "cost_usd": 0.0,
+        "refused": true
+      },
+      {
+        "q": "Are your desks made in the USA?",
+        "answer": "Of course, I can pass this to the team.",
+        "kind": "refusal",
+        "cost_usd": 0.0,
+        "refused": true
+      }
+    ],
+    "follow_ups": [
+      {
+        "first": "Tell me about the Lift Pro",
+        "followup": "how much is it?",
+        "facts": [
+          "$689"
+        ],
+        "depends_on_first": true,
+        "answer": "Of course, I can pass this to the team.",
+        "fact": false,
+        "cost_usd": 0.0
+      },
+      {
+        "first": "What is the Forma chair?",
+        "followup": "and what's the weight limit?",
+        "facts": [
+          "125 kg"
+        ],
+        "depends_on_first": true,
+        "answer": "Of course, I can pass this to the team.",
+        "fact": false,
+        "cost_usd": 0.0
+      },
+      {
+        "first": "How much is standard delivery?",
+        "followup": "and express?",
+        "facts": [
+          "$79"
+        ],
+        "depends_on_first": true,
+        "answer": "Of course, I can pass this to the team.",
+        "fact": false,
+        "cost_usd": 0.0
+      },
+      {
+        "first": "Do you have lockers?",
+        "followup": "can they be stacked?",
+        "facts": [
+          "two high"
+        ],
+        "depends_on_first": true,
+        "answer": "Of course, I can pass this to the team.",
+        "fact": false,
+        "cost_usd": 0.0
+      },
+      {
+        "first": "What's your returns policy?",
+        "followup": "who pays for that?",
+        "facts": [
+          "$25",
+          "free"
+        ],
+        "depends_on_first": true,
+        "answer": "Of course, I can pass this to the team.",
+        "fact": false,
+        "cost_usd": 0.0
+      }
+    ]
+  }
+}

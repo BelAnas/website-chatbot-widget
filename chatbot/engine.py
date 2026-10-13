@@ -165,20 +165,20 @@ class ChatEngine:
             else:
                 kind = "answer"
                 used: list[int] | None = None
-                wrote = False
                 async for event in self.provider.stream(question, query, hits, history, site):
                     if event["type"] == "token":
                         first_token_ms = first_token_ms or (time.perf_counter() - started) * 1000
                         text += event["text"]
-                        wrote = True
                         yield event
                     elif event["type"] == "used":
                         used = event["chunk_ids"]
                     elif event["type"] == "handoff":
-                        reasons.append(event["reason"])
+                        # "Not covered" is a guardrail and always counts. Sales tags are opt-in.
+                        if event["reason"] == "not_covered" or self.settings.model_lead_tags:
+                            reasons.append(event["reason"])
                     elif event["type"] == "usage":
                         usage = event
-                if not wrote:              # the model only called the tool and wrote nothing
+                if not text.strip():       # the model wrote a tag and nothing else
                     for event in say(HANDOFF_ONLY):
                         yield event
                 if "not_covered" in reasons:
@@ -189,15 +189,14 @@ class ChatEngine:
                     sources = to_sources([h for h in hits if h.chunk.id in used] if used else hits)
                     yield {"type": "sources", "sources": sources}
 
-        # 3. Offer the contact form. The rules always run; the model can only add to them.
-        if kind != "small_talk":
-            rule = detect_intent(message)
-            if rule:
-                reasons.append(rule)
+        # 3. Offer the contact form. The rules always run; the model's tags can only add to them.
+        rule = detect_intent(message) if kind != "small_talk" else None
+        if rule:
+            reasons.append(rule)
         reason = max(reasons, key=_REASON_RANK.__getitem__) if reasons else None
         # Shown once per conversation, so the bot does not nag. An explicit request for a person
-        # always gets the form again.
-        if reason and not has_lead and (not session["lead_prompted"] or reason == "wants_human"):
+        # always gets the form again; only the rules can do that, not a tag from the model.
+        if reason and not has_lead and (not session["lead_prompted"] or rule == "wants_human"):
             self.store.mark_lead_prompted(session_id, reason)
             yield {"type": "lead_prompt", "reason": reason, "text": PROMPTS[reason]}
 
