@@ -1,0 +1,275 @@
+{
+  "id": 22,
+  "slug": "website-chatbot",
+  "repo": "website-chatbot-widget",
+  "title": "Embeddable website chatbot with lead capture",
+  "tagline": "A chat widget you add to any website with one script tag: it answers from the site's own pages, streams the reply, and turns interested visitors into leads.",
+  "category": "Chatbots",
+  "status": "building",
+  "started": "2026-10-13",
+  "finished": "",
+  "pitch": "I built a chat widget that a business adds to its website with one line of code. It reads the site's own pages, so it answers visitors' questions from what the company actually says, with a link to the page, and it says so when the site does not cover the question. When a visitor shows buying interest, or asks something the site cannot answer, the widget offers a short contact form and the lead goes to the sales team with the whole conversation attached.",
+  "problem": "Most visitors leave a website without finding their answer and without leaving a contact. A contact form asks for effort before giving anything back, and live chat needs a person online. A generic chatbot answers from its own memory, so it invents prices and policies the business never published.",
+  "solution": "A small service and a JavaScript widget for a fictional office-furniture supplier. The service crawls the website, splits each page into sections and indexes them. A visitor's question is matched to the most relevant sections, a language model writes a short answer from those sections only, and the answer is streamed to the widget word by word with links to the source pages. A lead detector watches for buying interest and for questions the site cannot answer, then the widget shows a contact form. Leads are stored with the conversation and sent to a CRM by a signed webhook.",
+  "features": [
+    "One script tag embeds the widget on any site; its styles are isolated from the host page",
+    "Answers come from the website's own pages, with links to the page and section used",
+    "Replies are streamed word by word over server-sent events",
+    "Refuses politely when the site does not cover the question, instead of guessing",
+    "Detects buying interest and offers a contact form inside the chat",
+    "Stores each lead with the conversation and sends it to a CRM through a signed webhook",
+    "Works offline with a built-in mock model; switches to OpenAI or a local model with one setting",
+    "Limits on origin, request rate and message size protect the owner's API bill"
+  ],
+  "stack": [
+    {
+      "name": "Python 3.12 + FastAPI",
+      "role": "The service: chat endpoint, lead endpoint, admin page, and it serves the widget file.",
+      "why": "Async support makes streaming simple, and request validation comes for free."
+    },
+    {
+      "name": "Vanilla JavaScript widget",
+      "role": "The chat bubble and panel a visitor sees on the website.",
+      "why": "No framework and no build step keeps the file small and lets it load on any site without conflicts."
+    },
+    {
+      "name": "Server-sent events (SSE)",
+      "role": "Carries the answer from the server to the widget as it is written.",
+      "why": "It is plain HTTP, passes through proxies, and is simpler to host than WebSockets for one-way streaming."
+    },
+    {
+      "name": "BM25 + sentence embeddings (fastembed)",
+      "role": "Finds the page sections that match a question.",
+      "why": "Keyword search catches product names and codes, meaning search catches paraphrases; both run on CPU."
+    },
+    {
+      "name": "OpenAI-compatible chat API",
+      "role": "Writes the answer from the retrieved sections.",
+      "why": "The same code talks to OpenAI or to a local model through Ollama."
+    },
+    {
+      "name": "SQLite",
+      "role": "Stores conversations, leads and unanswered questions.",
+      "why": "One file, no server to run, enough for one website's chat traffic."
+    }
+  ],
+  "keywords": [],
+  "topics": [],
+  "workflow": [
+    {
+      "step": "Crawl",
+      "detail": "The crawler reads the site's sitemap, downloads each page and keeps the main text, dropping menus, footers and scripts."
+    },
+    {
+      "step": "Split and index",
+      "detail": "Each page is split at its headings into sections. Every section is indexed for keyword search and for meaning search."
+    },
+    {
+      "step": "Visitor asks",
+      "detail": "The widget sends the question and the conversation so far to the chat endpoint."
+    },
+    {
+      "step": "Guard",
+      "detail": "The service checks the calling website, the request rate and the message size before any model is called."
+    },
+    {
+      "step": "Retrieve",
+      "detail": "The question is matched to the most relevant sections. If nothing is relevant enough, the bot says the site does not cover it."
+    },
+    {
+      "step": "Answer and stream",
+      "detail": "The model writes a short answer from the retrieved sections, and each piece is sent to the widget as it is produced, followed by the source links."
+    },
+    {
+      "step": "Detect a lead",
+      "detail": "Buying interest, a request for a person, or an unanswered question makes the widget show a contact form."
+    },
+    {
+      "step": "Store and notify",
+      "detail": "The lead is saved with the conversation and posted to the CRM webhook with a signature the receiver can verify."
+    }
+  ],
+  "phases": [
+    {
+      "name": "Foundation",
+      "goal": "A repository that runs, a demo website to chat about, and a searchable index of its pages.",
+      "status": "done",
+      "steps": [
+        {
+          "text": "Create the repository skeleton, the virtual environment and pinned requirements",
+          "done": true
+        },
+        {
+          "text": "Write the demo website: a fictional office-furniture supplier with about 12 pages",
+          "done": true
+        },
+        {
+          "text": "Write the crawler: sitemap, robots.txt, same-site links, HTML to clean text",
+          "done": true
+        },
+        {
+          "text": "Split pages into sections by heading, keeping the page title, URL and anchor",
+          "done": true
+        },
+        {
+          "text": "Build a BM25 keyword index as the baseline and search it from the command line",
+          "done": true
+        }
+      ],
+      "outcome": "A git repository with pinned dependencies, a 14-page demo website for a fictional office-furniture supplier (52 sections, about 1,600 words, generated by a script), a crawler that reads a live site or a folder and drops menus, footers, cookie banners and scripts, 66 passages split by heading, and keyword, meaning and hybrid search from the command line."
+    },
+    {
+      "name": "Chat engine",
+      "goal": "A question goes in and a streamed, grounded answer with sources comes out, on the mock model.",
+      "status": "doing",
+      "steps": [
+        {
+          "text": "Add meaning search with embeddings and a hybrid mode that merges both rankings",
+          "done": false
+        },
+        {
+          "text": "Add the scope gate that refuses questions the site does not cover",
+          "done": false
+        },
+        {
+          "text": "Write the mock provider: a deterministic answer built from the retrieved sentences",
+          "done": false
+        },
+        {
+          "text": "Write the OpenAI-compatible provider with streaming, a token cap and cost tracking",
+          "done": false
+        },
+        {
+          "text": "Handle follow-up questions by using the previous question during retrieval",
+          "done": false
+        },
+        {
+          "text": "Expose the chat as a server-sent events endpoint and save conversations in SQLite",
+          "done": false
+        }
+      ],
+      "outcome": ""
+    },
+    {
+      "name": "Lead capture",
+      "goal": "Interested visitors are detected, their details are stored and the sales team is notified.",
+      "status": "todo",
+      "steps": [
+        {
+          "text": "Write the lead-intent detector: rules that always run, plus a tool the model can call",
+          "done": false
+        },
+        {
+          "text": "Add the lead endpoint with validation, consent and the conversation attached",
+          "done": false
+        },
+        {
+          "text": "Pick up an email address a visitor types directly into the chat",
+          "done": false
+        },
+        {
+          "text": "Send each lead to a webhook with an HMAC signature and retries",
+          "done": false
+        },
+        {
+          "text": "Add an admin view of leads and unanswered questions, protected by a token, with CSV export",
+          "done": false
+        }
+      ],
+      "outcome": ""
+    },
+    {
+      "name": "Widget and guards",
+      "goal": "The widget works on a real page in a real browser, and the service protects itself.",
+      "status": "todo",
+      "steps": [
+        {
+          "text": "Write the widget: launcher, panel, streamed replies, source links, lead form, saved session",
+          "done": false
+        },
+        {
+          "text": "Embed it in the demo website and serve everything with one command",
+          "done": false
+        },
+        {
+          "text": "Add the origin allow-list, rate limit, message-size cap and daily message budget",
+          "done": false
+        },
+        {
+          "text": "Drive the widget in a headless browser and take a screenshot",
+          "done": false
+        }
+      ],
+      "outcome": ""
+    },
+    {
+      "name": "Quality",
+      "goal": "Measured numbers for search, refusals, lead detection and speed.",
+      "status": "todo",
+      "steps": [
+        {
+          "text": "Write labelled evaluation sets: site questions, off-topic questions, lead and non-lead messages",
+          "done": false
+        },
+        {
+          "text": "Measure retrieval for keyword, meaning and hybrid search and pick the default",
+          "done": false
+        },
+        {
+          "text": "Set the refusal threshold on one half of the questions and report on the other half",
+          "done": false
+        },
+        {
+          "text": "Measure lead-detection precision and recall",
+          "done": false
+        },
+        {
+          "text": "Measure time to first word and the widget's file size",
+          "done": false
+        }
+      ],
+      "outcome": ""
+    },
+    {
+      "name": "Verification and docs",
+      "goal": "A stranger can clone it, run it and trust the numbers.",
+      "status": "todo",
+      "steps": [
+        {
+          "text": "Run the full test suite offline with no key",
+          "done": false
+        },
+        {
+          "text": "Run the quick start from a clean clone",
+          "done": false
+        },
+        {
+          "text": "Run the real-model check and record its cost",
+          "done": false
+        },
+        {
+          "text": "Write the README with a diagram, real output and the results table",
+          "done": false
+        },
+        {
+          "text": "Complete the dashboard entry: decisions, client questions, concepts, limits",
+          "done": false
+        }
+      ],
+      "outcome": ""
+    }
+  ],
+  "decisions": [],
+  "results": [],
+  "client_qa": [],
+  "concepts": [],
+  "limits": [],
+  "run": [],
+  "files": [],
+  "verification": {
+    "tests": "",
+    "live_llm": "pending",
+    "cost_usd": 0,
+    "notes": "Build in progress."
+  }
+}

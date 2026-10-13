@@ -1,0 +1,9 @@
+:root{--ink:#1c2321;--muted:#5d6b66;--line:#dfe5e1;--brand:#1f5f4a;--bg:#f7f8f6}
+*{box-sizing:border-box}body{margin:0;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+.top{display:flex;gap:24px;align-items:center;flex-wrap:wrap;padding:14px 24px;background:#fff;border-bottom:1px solid var(--line)}
+.brand{font-weight:700;font-size:20px;color:var(--brand);text-decoration:none}
+nav ul{display:flex;flex-wrap:wrap;gap:4px 16px;list-style:none;margin:0;padding:0}nav a{color:var(--muted);text-decoration:none;font-size:14px}nav a:hover{color:var(--brand)}
+.cookie{background:#eef3f0;color:var(--muted);font-size:13px;padding:6px 24px}.cookie button{margin-left:8px}
+main{max-width:760px;margin:0 auto;padding:32px 24px 80px}h1{font-size:34px;line-height:1.2;margin:0 0 8px}.intro{font-size:18px;color:var(--muted)}
+section{background:#fff;border:1px solid var(--line);border-radius:10px;padding:4px 20px;margin:16px 0}h2{font-size:20px;margin:14px 0 4px}
+.promo,footer{max-width:760px;margin:0 auto;padding:16px 24px;color:var(--muted);font-size:14px}footer ul{display:flex;gap:16px;list-style:none;padding:0}

@@ -1,0 +1,8 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+# Built index, chat database and browser-test output: all recreated by a command.
+.index/
+*.sqlite3
+*.sqlite3-*
