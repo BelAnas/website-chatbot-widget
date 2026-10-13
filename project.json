@@ -181,26 +181,26 @@
     {
       "name": "Widget and guards",
       "goal": "The widget works on a real page in a real browser, and the service protects itself.",
-      "status": "todo",
+      "status": "done",
       "steps": [
         {
           "text": "Write the widget: launcher, panel, streamed replies, source links, lead form, saved session",
-          "done": false
+          "done": true
         },
         {
           "text": "Embed it in the demo website and serve everything with one command",
-          "done": false
+          "done": true
         },
         {
           "text": "Add the origin allow-list, rate limit, message-size cap and daily message budget",
-          "done": false
+          "done": true
         },
         {
           "text": "Drive the widget in a headless browser and take a screenshot",
-          "done": false
+          "done": true
         }
       ],
-      "outcome": ""
+      "outcome": "The widget is one JavaScript file of about 18 KB (6 KB compressed) with no dependencies, added to a page with one script tag. It keeps its styles in a shadow root, streams the reply as it arrives, shows links to the source sections, renders the contact form in the conversation, and keeps the conversation across pages. The service checks the calling website against an allow-list, limits requests per visitor and per day, and caps message size, all before any model call. A headless-browser script drove the widget like a visitor on the demo site, on a second origin and at phone width: 15 of 15 checks passed, and it saved the screenshots in docs/."
     },
     {
       "name": "Quality",
