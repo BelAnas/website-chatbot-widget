@@ -58,7 +58,7 @@ def main(argv: list[str] | None = None) -> int:
         engine = ChatEngine(settings, get_index(settings), Store(":memory:"))
 
         async def run() -> None:
-            async for event in engine.reply("cli", args.question, []):
+            async for event in engine.reply("cli-session", args.question):
                 if event["type"] == "token":
                     print(event["text"], end="", flush=True)
                 elif event["type"] == "sources":

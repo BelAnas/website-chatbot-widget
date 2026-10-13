@@ -121,39 +121,39 @@
     {
       "name": "Chat engine",
       "goal": "A question goes in and a streamed, grounded answer with sources comes out, on the mock model.",
-      "status": "doing",
+      "status": "done",
       "steps": [
         {
           "text": "Add meaning search with embeddings and a hybrid mode that merges both rankings",
-          "done": false
+          "done": true
         },
         {
           "text": "Add the scope gate that refuses questions the site does not cover",
-          "done": false
+          "done": true
         },
         {
           "text": "Write the mock provider: a deterministic answer built from the retrieved sentences",
-          "done": false
+          "done": true
         },
         {
           "text": "Write the OpenAI-compatible provider with streaming, a token cap and cost tracking",
-          "done": false
+          "done": true
         },
         {
           "text": "Handle follow-up questions by using the previous question during retrieval",
-          "done": false
+          "done": true
         },
         {
           "text": "Expose the chat as a server-sent events endpoint and save conversations in SQLite",
-          "done": false
+          "done": true
         }
       ],
-      "outcome": ""
+      "outcome": "A question now produces a streamed answer with links to the website sections it came from. Search runs in three modes (keywords, meaning, hybrid by reciprocal rank fusion), a scope gate refuses questions the site does not cover, follow-up questions such as 'and express?' reuse the previous question, and conversations are saved in SQLite. Two answer writers exist: an offline mock that quotes the matching sentences, and an OpenAI-compatible one with streaming, a token cap and cost tracking. The chat is served as server-sent events at POST /api/chat; on the mock the first word arrived after about 20 ms."
     },
     {
       "name": "Lead capture",
       "goal": "Interested visitors are detected, their details are stored and the sales team is notified.",
-      "status": "todo",
+      "status": "doing",
       "steps": [
         {
           "text": "Write the lead-intent detector: rules that always run, plus a tool the model can call",

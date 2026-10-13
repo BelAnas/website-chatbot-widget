@@ -45,6 +45,7 @@ class Settings:
     openai_model: str = "gpt-4o-mini"
     openai_base_url: str = ""             # empty = OpenAI; http://localhost:11434/v1 = Ollama
     max_output_tokens: int = 220
+    llm_timeout_s: float = 60
     mock_delay_ms: int = 12               # pause between words, so the mock visibly streams
 
     # --- search ---
@@ -85,6 +86,7 @@ class Settings:
             openai_model=_env("OPENAI_MODEL", d.openai_model) or d.openai_model,
             openai_base_url=_env("OPENAI_BASE_URL"),
             max_output_tokens=int(_env("MAX_OUTPUT_TOKENS", str(d.max_output_tokens))),
+            llm_timeout_s=float(_env("LLM_TIMEOUT_S", str(d.llm_timeout_s))),
             mock_delay_ms=int(_env("MOCK_DELAY_MS", str(d.mock_delay_ms))),
             embedder=_env("EMBEDDER", d.embedder).lower(),
             embedding_model=_env("EMBEDDING_MODEL", d.embedding_model),
